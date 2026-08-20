@@ -44,7 +44,19 @@ app_license = "mit"
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_list_js = {
+    "Purchase Order": "public/js/purchase_order_list.js"
+}
+
+doctype_js = {
+    "Purchase Order": "public/js/purchase_order.js"
+}
+
+doc_events = {
+    "Purchase Order": {
+        "validate": "oerp_custom.overrides.purchase_order.validate_contract_scope",
+    }
+}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
