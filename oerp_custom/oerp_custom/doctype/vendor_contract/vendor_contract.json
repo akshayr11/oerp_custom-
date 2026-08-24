@@ -1,0 +1,170 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-08-18 15:34:19.250991",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_u5qq",
+  "amended_from",
+  "naming_series",
+  "vendor",
+  "vendor_name",
+  "payment_term",
+  "type_of_service",
+  "column_break_t51k",
+  "contract_no",
+  "contract_title",
+  "contract_start_date",
+  "contract_end_date",
+  "contract_value",
+  "column_break_kmkz",
+  "items_section",
+  "vendor_contract_items_table",
+  "section_break_cqlh",
+  "reference_no",
+  "scope_of_work_description",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_u5qq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vendor Contract",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Naming Series",
+   "options": "SUP-CONT-.YYYY.-.#####"
+  },
+  {
+   "fieldname": "vendor",
+   "fieldtype": "Link",
+   "label": "Vendor",
+   "options": "Supplier"
+  },
+  {
+   "fetch_from": "vendor.supplier_name",
+   "fieldname": "vendor_name",
+   "fieldtype": "Data",
+   "label": "Vendor Name"
+  },
+  {
+   "fieldname": "payment_term",
+   "fieldtype": "Link",
+   "label": "Payment Term",
+   "options": "Payment Term"
+  },
+  {
+   "fieldname": "type_of_service",
+   "fieldtype": "Data",
+   "label": "Type of Service"
+  },
+  {
+   "fieldname": "column_break_t51k",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contract_no",
+   "fieldtype": "Data",
+   "label": "Contract No"
+  },
+  {
+   "fieldname": "contract_title",
+   "fieldtype": "Data",
+   "label": "Contract Title"
+  },
+  {
+   "fieldname": "contract_start_date",
+   "fieldtype": "Date",
+   "label": "Contract Start Date"
+  },
+  {
+   "fieldname": "contract_end_date",
+   "fieldtype": "Date",
+   "label": "Contract End Date"
+  },
+  {
+   "fieldname": "contract_value",
+   "fieldtype": "Float",
+   "label": "Contract Value"
+  },
+  {
+   "fieldname": "column_break_kmkz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_cqlh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reference_no",
+   "fieldtype": "Data",
+   "label": "Reference No"
+  },
+  {
+   "fieldname": "scope_of_work_description",
+   "fieldtype": "Small Text",
+   "label": "Scope of Work (Description)"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "items_section",
+   "fieldtype": "Section Break",
+   "label": "Items"
+  },
+  {
+   "fieldname": "vendor_contract_items_table",
+   "fieldtype": "Table",
+   "label": "Vendor Contract Items Table",
+   "options": "Vendor Contract Items Table"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-08-18 15:39:24.384539",
+ "modified_by": "Administrator",
+ "module": "Oerp Custom",
+ "name": "Vendor Contract",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
