@@ -2,7 +2,8 @@
 //
 // Ticked:   series SER-MR-.YYYY.-####, Service Type mandatory (via
 //           mandatory_depends_on on the field), and the Item dropdown offers
-//           only service items (Maintain Stock off).
+//           only service items (Maintain Stock off) that match the same
+//           Service Type selected on this Material Request.
 // Unticked: back to the standard series; the item dropdown is unrestricted.
 //
 // Everything here is convenience — oerp_custom.overrides.service_naming
@@ -32,7 +33,7 @@ frappe.ui.form.on("Material Request", {
 					title: __("Check the item rows"),
 					indicator: "orange",
 					message: __(
-						"This is now a service request: only service items (Maintain Stock off) are allowed. Rows already entered will be checked when you save."
+						"This is now a service request: only service items (Maintain Stock off) matching the selected Service Type are allowed. Rows already entered will be checked when you save."
 					),
 				});
 			}
@@ -44,6 +45,12 @@ frappe.ui.form.on("Material Request", {
 		}
 		set_service_item_query(frm);
 	},
+
+	// Re-filter the moment the Service Type changes, so the dropdown always
+	// reflects the currently selected type (not just at load/refresh).
+	custom_service_type(frm) {
+		set_service_item_query(frm);
+	},
 });
 
 function set_service_item_query(frm) {
@@ -52,6 +59,12 @@ function set_service_item_query(frm) {
 		if (frm.doc.custom_by_service_) {
 			// Service items are the ones that do not maintain stock.
 			filters.is_stock_item = 0;
+
+			// Further narrow to items tagged with the same Service Type as
+			// this request, if one has been chosen yet.
+			if (frm.doc.custom_service_type) {
+				filters.custom_service_type = frm.doc.custom_service_type;
+			}
 		}
 		return { filters };
 	});

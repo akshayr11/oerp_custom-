@@ -8,7 +8,7 @@ Material Request
 Ticking **By Service** (`custom_by_service_`) turns the document into a service
 request:
 
-    * the series becomes  SER-MR-.YYYY.-####
+    * the series becomes  SER-MR-.YYYY.-
     * `custom_service_type` becomes mandatory
     * every item row must be a service item (Maintain Stock off)
 
@@ -16,8 +16,8 @@ Purchase Order
 --------------
 The series follows `purchase_type`:
 
-    Service   ->  PUR-SER-.YYYY.-####
-    Contract  ->  PUR-CON-.YYYY.-####
+    Service   ->  PUR-SER-.YYYY.-
+    Contract  ->  PUR-CON-.YYYY.-
     others    ->  whatever the user picked (default PUR-ORD-.YYYY.-)
 
 All of it is enforced here, so REST, Data Import and the bench console get the
@@ -32,11 +32,11 @@ a rename — renaming a numbered document would orphan every link to it).
 import frappe
 from frappe import _
 
-MR_SERVICE_SERIES = "SER-MR-.YYYY.-####"
+MR_SERVICE_SERIES = "SER-MR-.YYYY.-"
 
 PO_SERIES_BY_TYPE = {
-	"Service": "PUR-SER-.YYYY.-####",
-	"Contract": "PUR-CON-.YYYY.-####",
+	"Service": "PUR-SER-.YYYY.-",
+	"Contract": "PUR-CON-.YYYY.-",
 }
 
 

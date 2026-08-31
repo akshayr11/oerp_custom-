@@ -4,10 +4,37 @@
 //
 // Both restrictions are re-checked server-side in
 // oerp_custom.overrides.purchase_order — this file only shapes the dropdowns.
+//
+// Naming series follows the purchase type.
+//
+//   Service  -> PUR-SER-.YYYY.-####      Contract -> PUR-CON-.YYYY.-####
+//   others   -> PUR-ORD-.YYYY.- (the standard default)
+//
+// The same mapping is enforced server-side in
+// oerp_custom.overrides.service_naming.apply_po_naming, and a PO created from
+// a service Material Request arrives with type, service type and series
+// already set by the make_purchase_order override.
+//
+// When items are pulled in via "Get Items From" a Material Request (rather
+// than mapped from a Supplier Quotation), nothing fires purchase_type
+// manually — so set_service_type_from_items below detects a service Material
+// Request from the row's link and sets purchase_type itself, which then
+// drives naming_series through the same handler.
+
+const PO_SERIES_BY_TYPE = {
+	Service: "PUR-SER-.YYYY.-####",
+	Contract: "PUR-CON-.YYYY.-####",
+};
+const PO_DEFAULT_SERIES = "PUR-ORD-.YYYY.-";
 
 frappe.ui.form.on("Purchase Order", {
 	refresh(frm) {
 		set_contract_queries(frm);
+		set_service_type_from_items(frm);
+	},
+
+	items_add(frm) {
+		set_service_type_from_items(frm);
 	},
 
 	purchase_type(frm) {
@@ -20,6 +47,16 @@ frappe.ui.form.on("Purchase Order", {
 			frm.set_value("custom_vendor_contract", null);
 		}
 		set_contract_queries(frm);
+
+		if (!frm.is_new()) {
+			// The document is already numbered; the server will warn if the
+			// series no longer matches. Do not fight the name here.
+			return;
+		}
+		frm.set_value("naming_series", PO_SERIES_BY_TYPE[frm.doc.purchase_type] || PO_DEFAULT_SERIES);
+		if (frm.doc.purchase_type !== "Service" && frm.doc.custom_service_type) {
+			frm.set_value("custom_service_type", null);
+		}
 	},
 
 	supplier(frm) {
@@ -117,35 +154,42 @@ function fetch_vendor_contract(frm) {
 	});
 }
 
+function set_service_type_from_items(frm) {
+	// Only worth doing on a not-yet-named document — an existing PO's
+	// purchase_type/series shouldn't be rewritten just because it refreshed.
+	if (!frm.is_new()) {
+		return;
+	}
 
-// ---------------------------------------------------------------------------
-// Naming series follows the purchase type.
-//
-//   Service  -> PUR-SER-.YYYY.-####      Contract -> PUR-CON-.YYYY.-####
-//   others   -> PUR-ORD-.YYYY.- (the standard default)
-//
-// The same mapping is enforced server-side in
-// oerp_custom.overrides.service_naming.apply_po_naming, and a PO created from
-// a service Material Request arrives with type, service type and series
-// already set by the make_purchase_order override.
-// ---------------------------------------------------------------------------
+	const row = (frm.doc.items || []).find((r) => r.material_request);
+	if (!row || !row.material_request) {
+		return;
+	}
 
-const PO_SERIES_BY_TYPE = {
-	Service: "PUR-SER-.YYYY.-####",
-	Contract: "PUR-CON-.YYYY.-####",
-};
-const PO_DEFAULT_SERIES = "PUR-ORD-.YYYY.-";
+	frappe.db
+		.get_value("Material Request", row.material_request, [
+			"custom_service_type",
+			"custom_by_service_",
+		])
+		.then((r) => {
+			const data = r.message || {};
 
-frappe.ui.form.on("Purchase Order", {
-	purchase_type(frm) {
-		if (!frm.is_new()) {
-			// The document is already numbered; the server will warn if the
-			// series no longer matches. Do not fight the name here.
-			return;
-		}
-		frm.set_value("naming_series", PO_SERIES_BY_TYPE[frm.doc.purchase_type] || PO_DEFAULT_SERIES);
-		if (frm.doc.purchase_type !== "Service" && frm.doc.custom_service_type) {
-			frm.set_value("custom_service_type", null);
-		}
-	},
-});
+			if (data.custom_service_type && !frm.doc.custom_service_type) {
+				frm.set_value("custom_service_type", data.custom_service_type);
+			}
+
+			// If the source Material Request was a service request, mirror
+			// that here — setting purchase_type triggers the handler above,
+			// which applies the matching naming_series in one place.
+			if (data.custom_by_service_ && frm.doc.purchase_type !== "Service") {
+				frm.set_value("purchase_type", "Service");
+			} else if (PO_SERIES_BY_TYPE[frm.doc.purchase_type]) {
+				// purchase_type already matches or was independently set —
+				// just make sure naming_series agrees with it.
+				frm.set_value(
+					"naming_series",
+					PO_SERIES_BY_TYPE[frm.doc.purchase_type] || PO_DEFAULT_SERIES
+				);
+			}
+		});
+}

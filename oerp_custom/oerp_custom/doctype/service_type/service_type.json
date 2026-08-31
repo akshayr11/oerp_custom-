@@ -2,14 +2,13 @@
  "actions": [],
  "allow_bulk_edit": 1,
  "allow_rename": 1,
- "autoname": "naming_series:",
+ "autoname": "field:service_type_name",
  "creation": "2026-08-24 17:30:25.633192",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_bajo",
   "amended_from",
-  "naming_series",
   "service_type_name",
   "service_type_description",
   "expense_account"
@@ -30,16 +29,10 @@
    "search_index": 1
   },
   {
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "hidden": 1,
-   "label": "Naming Series",
-   "options": "SER-TYPE-#####"
-  },
-  {
    "fieldname": "service_type_name",
    "fieldtype": "Data",
-   "label": "Service Type Name"
+   "label": "Service Type Name",
+   "unique": 1
   },
   {
    "fieldname": "service_type_description",
@@ -57,11 +50,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-24 17:30:25.633192",
+ "modified": "2026-08-31 14:19:51.384171",
  "modified_by": "Administrator",
  "module": "Oerp Custom",
  "name": "Service Type",
- "naming_rule": "By \"Naming Series\" field",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
