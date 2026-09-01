@@ -1,9 +1,12 @@
 // Purchase Order form: when purchase_type is "Contract", restrict the Supplier
 // link to suppliers holding a submitted Vendor Contract, and restrict the Items
-// table's Item link to that supplier's contracted items.
+// table's Item link to that supplier's contracted items. For Contract POs, the
+// Rate and Amount columns are locked (read-only) so the price cannot drift off
+// what the contract dictates — everything else in the table stays editable.
 //
 // Both restrictions are re-checked server-side in
-// oerp_custom.overrides.purchase_order — this file only shapes the dropdowns.
+// oerp_custom.overrides.purchase_order — this file only shapes the dropdowns
+// and the grid's editability.
 //
 // Naming series follows the purchase type.
 //
@@ -30,6 +33,7 @@ const PO_DEFAULT_SERIES = "PUR-ORD-.YYYY.-";
 frappe.ui.form.on("Purchase Order", {
 	refresh(frm) {
 		set_contract_queries(frm);
+		set_items_editable(frm);
 		set_service_type_from_items(frm);
 	},
 
@@ -47,6 +51,7 @@ frappe.ui.form.on("Purchase Order", {
 			frm.set_value("custom_vendor_contract", null);
 		}
 		set_contract_queries(frm);
+		set_items_editable(frm);
 
 		if (!frm.is_new()) {
 			// The document is already numbered; the server will warn if the
@@ -79,7 +84,8 @@ frappe.ui.form.on("Purchase Order Item", {
 
 		// Pull the contracted rate so the order cannot silently drift off the
 		// agreed price. ERPNext's own price-list fetch fires too, so this runs
-		// after it and wins.
+		// after it and wins. Still relevant even with rate locked in the UI,
+		// since this writes programmatically, not through manual grid entry.
 		frappe.call({
 			method: "oerp_custom.queries.get_contract_item_details",
 			args: { vendor: frm.doc.supplier, item: row.item_code },
@@ -101,6 +107,23 @@ function clear_items(frm) {
 		frm.clear_table("items");
 		frm.refresh_field("items");
 	}
+}
+
+function set_items_editable(frm) {
+	const is_contract = frm.doc.purchase_type === "Contract";
+
+	// The grid itself stays fully usable — rows can still be added/removed
+	// and item_code picked normally. Only Rate and Amount are locked for
+	// Contract POs, since those must come from the contracted price rather
+	// than manual entry.
+	frm.set_df_property("items", "read_only", 0);
+
+	if (frm.fields_dict.items && frm.fields_dict.items.grid) {
+		frm.fields_dict.items.grid.update_docfield_property("rate", "read_only", is_contract ? 1 : 0);
+		frm.fields_dict.items.grid.update_docfield_property("amount", "read_only", is_contract ? 1 : 0);
+	}
+
+	frm.refresh_field("items");
 }
 
 function set_contract_queries(frm) {
