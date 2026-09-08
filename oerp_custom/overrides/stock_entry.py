@@ -10,7 +10,7 @@ def create_tool_registry_records(doc, method):
         item_group = row.get("item_group") or frappe.db.get_value(
             "Item", row.item_code, "item_group"
         )
-        if item_group != "Tools":
+        if item_group != "Tool":
             continue
 
         qty = int(row.qty or 0)
