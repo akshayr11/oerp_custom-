@@ -17,6 +17,10 @@ class ToolTransfer(Document):
             tool.location = row.target_location
             tool.crew_name = row.target_crew
             tool.custodian_employee_no = row.to_employee
+
+            if row.to_asset:
+                tool.asset_no = row.to_asset
+
             tool.save(ignore_permissions=True)
 
         frappe.db.commit()
@@ -30,6 +34,10 @@ class ToolTransfer(Document):
             tool.location = row.source_location
             tool.crew_name = row.from_crew
             tool.custodian_employee_no = row.from_employee
+
+            if row.from_asset:
+                tool.asset_no = row.from_asset
+
             tool.save(ignore_permissions=True)
 
         frappe.db.commit()

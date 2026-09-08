@@ -69,3 +69,50 @@ function set_service_item_query(frm) {
 		return { filters };
 	});
 }
+
+// --- Per-warehouse Min/Max Qty lookup ---
+//
+// min_qty / max_qty on Material Request Item come from the item's
+// "Re-order Levels" child table (Item Reorder), matched by the row's
+// warehouse, and refresh whenever the item or warehouse changes.
+frappe.ui.form.on("Material Request Item", {
+	item_code(frm, cdt, cdn) {
+		update_qty_levels(frm, cdt, cdn);
+	},
+	warehouse(frm, cdt, cdn) {
+		update_qty_levels(frm, cdt, cdn);
+	},
+});
+
+function update_qty_levels(frm, cdt, cdn) {
+	const row = locals[cdt][cdn];
+	if (!row.item_code || !row.warehouse) {
+		return;
+	}
+
+	frappe.call({
+		method: "frappe.client.get_list",
+		args: {
+			doctype: "Item Reorder",
+			parent: "Item", // parent DocType — required for child-table reads
+			filters: {
+				parent: row.item_code, // the Item name
+				parenttype: "Item",
+				warehouse: row.warehouse,
+			},
+			fields: ["warehouse_reorder_level", "warehouse_reorder_qty"],
+			limit_page_length: 1,
+		},
+		callback(r) {
+			// The row may have moved on while the call was in flight.
+			const current = locals[cdt][cdn];
+			if (!current || current.item_code !== row.item_code || current.warehouse !== row.warehouse) {
+				return;
+			}
+
+			const level = r.message && r.message.length ? r.message[0] : null;
+			frappe.model.set_value(cdt, cdn, "min_qty", level ? level.warehouse_reorder_level : null);
+			frappe.model.set_value(cdt, cdn, "max_qty", level ? level.warehouse_reorder_qty : null);
+		},
+	});
+}

@@ -72,6 +72,9 @@ doc_events = {
     },
     "Stock Entry": {
         "on_submit": "oerp_custom.overrides.stock_entry.create_tool_registry_records"
+    },
+    "Item": {
+        "validate": "oerp_custom.overrides.item.sync_qty_level_to_reorder"
     }
 }
 

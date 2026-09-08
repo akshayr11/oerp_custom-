@@ -7,6 +7,15 @@ frappe.ui.form.on("Tool Transfer", {
                 }
             };
         });
+
+        // Restrict Tool No dropdown to only Active tools
+        frm.set_query("tool_no", "tools", function() {
+            return {
+                filters: {
+                    tool_status: "Active"
+                }
+            };
+        });
     },
 
     onload: function(frm) {
@@ -16,7 +25,6 @@ frappe.ui.form.on("Tool Transfer", {
     }
 });
 
-// IMPORTANT: this must match your ACTUAL child table doctype name exactly
 frappe.ui.form.on("Tool Transfer Child Table", {
     tool_no: function(frm, cdt, cdn) {
         let row = locals[cdt][cdn];
@@ -27,7 +35,7 @@ frappe.ui.form.on("Tool Transfer Child Table", {
             frappe.model.set_value(cdt, cdn, "source_location", doc.location);
             frappe.model.set_value(cdt, cdn, "from_employee", doc.custodian_employee_no);
             frappe.model.set_value(cdt, cdn, "from_crew", doc.crew_name);
-            frappe.model.set_value(cdt, cdn, "asset_ref_no", doc.asset_no);
+            frappe.model.set_value(cdt, cdn, "from_asset", doc.asset_no);
             frm.refresh_field("tools");
         });
     }

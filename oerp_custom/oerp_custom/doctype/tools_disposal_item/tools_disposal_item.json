@@ -32,24 +32,28 @@
    "fieldname": "location",
    "fieldtype": "Link",
    "label": "Location",
-   "options": "Location"
+   "options": "Location",
+   "read_only": 1
   },
   {
    "fieldname": "custodian_employee",
    "fieldtype": "Link",
    "label": "Custodian Employee",
-   "options": "Employee"
+   "options": "Employee",
+   "read_only": 1
   },
   {
    "fieldname": "crew",
    "fieldtype": "Data",
-   "label": "Crew"
+   "label": "Crew",
+   "read_only": 1
   },
   {
    "fieldname": "asset_no",
    "fieldtype": "Link",
    "label": "Asset No",
-   "options": "Asset"
+   "options": "Asset",
+   "read_only": 1
   },
   {
    "fieldname": "disposal_reason",
@@ -61,7 +65,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-09-07 19:24:27.853772",
+ "modified": "2026-09-08 16:37:40.162278",
  "modified_by": "Administrator",
  "module": "Oerp Custom",
  "name": "Tools Disposal Item",

@@ -13,12 +13,12 @@ class ToolsDisposal(Document):
             seen.add(row.tool_no)
 
             status = frappe.db.get_value("Tool Registry", row.tool_no, "tool_status")
-            if status == "Disposed":
-                frappe.throw(f"Row {row.idx}: Tool {row.tool_no} is already Disposed")
+            if status == "Not Be Available For Transfer":
+                frappe.throw(f"Row {row.idx}: Tool {row.tool_no} is already Not Be Available For Transfer")
 
     def on_submit(self):
         for row in self.tools:
-            frappe.db.set_value("Tool Registry", row.tool_no, "tool_status", "Disposed")
+            frappe.db.set_value("Tool Registry", row.tool_no, "tool_status", "Not Be Available For Transfer")
 
         frappe.db.commit()
 
