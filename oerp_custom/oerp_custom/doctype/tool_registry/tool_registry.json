@@ -1,0 +1,161 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "autoname": "field:tool_no",
+ "creation": "2026-09-07 17:01:57.504183",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "tool_no",
+  "stock_issue_no",
+  "item_code",
+  "column_break_bmbv",
+  "crew_name",
+  "custodian_employee_no",
+  "asset_no",
+  "issue_to",
+  "section_break_jquy",
+  "model",
+  "certificate_expiry_date",
+  "make",
+  "tool_specification",
+  "column_break_hwyd",
+  "location",
+  "certificate_no",
+  "serial_no",
+  "tool_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stock_issue_no",
+   "fieldtype": "Link",
+   "label": "Stock Issue No",
+   "options": "Stock Entry",
+   "reqd": 1
+  },
+  {
+   "fieldname": "issue_to",
+   "fieldtype": "Data",
+   "label": "Issue To"
+  },
+  {
+   "fieldname": "asset_no",
+   "fieldtype": "Link",
+   "label": "Asset No",
+   "options": "Asset"
+  },
+  {
+   "fieldname": "custodian_employee_no",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Custodian Employee No",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "crew_name",
+   "fieldtype": "Data",
+   "label": "Crew Name"
+  },
+  {
+   "fieldname": "serial_no",
+   "fieldtype": "Data",
+   "label": "Serial No"
+  },
+  {
+   "fieldname": "make",
+   "fieldtype": "Data",
+   "label": "Make"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
+  },
+  {
+   "fieldname": "tool_specification",
+   "fieldtype": "Data",
+   "label": "Tool Specification"
+  },
+  {
+   "fieldname": "certificate_no",
+   "fieldtype": "Data",
+   "label": "Certificate No"
+  },
+  {
+   "fieldname": "certificate_expiry_date",
+   "fieldtype": "Data",
+   "label": "Certificate Expiry date"
+  },
+  {
+   "fieldname": "tool_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Tool Status",
+   "options": "\nActive\nDisposed"
+  },
+  {
+   "fieldname": "tool_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tool No",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_bmbv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_jquy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_hwyd",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-07 19:28:53.720549",
+ "modified_by": "Administrator",
+ "module": "Oerp Custom",
+ "name": "Tool Registry",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "tool_no"
+}

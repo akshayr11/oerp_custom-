@@ -70,6 +70,9 @@ doc_events = {
         # By Service: SER-MR series, Service Type mandatory, service items only.
         "validate": "oerp_custom.overrides.service_naming.validate_material_request",
     },
+    "Stock Entry": {
+        "on_submit": "oerp_custom.overrides.stock_entry.create_tool_registry_records"
+    }
 }
 
 # A PO raised from a service Material Request arrives already typed as Service,

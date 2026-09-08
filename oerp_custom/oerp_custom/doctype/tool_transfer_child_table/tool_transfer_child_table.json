@@ -1,0 +1,97 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "creation": "2026-09-07 18:23:04.782422",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "tool_no",
+  "source_location",
+  "from_employee",
+  "from_crew",
+  "asset_ref_no",
+  "target_location",
+  "target_crew",
+  "to_employee"
+ ],
+ "fields": [
+  {
+   "fieldname": "tool_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Tool No",
+   "options": "Tool Registry"
+  },
+  {
+   "fieldname": "source_location",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Source Location",
+   "options": "Location"
+  },
+  {
+   "fieldname": "from_employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "From Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "from_crew",
+   "fieldtype": "Data",
+   "label": "From Crew"
+  },
+  {
+   "fieldname": "asset_ref_no",
+   "fieldtype": "Link",
+   "label": "Asset Ref No",
+   "options": "Asset"
+  },
+  {
+   "fieldname": "target_location",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Target Location",
+   "options": "Location"
+  },
+  {
+   "fieldname": "target_crew",
+   "fieldtype": "Data",
+   "label": "Target Crew"
+  },
+  {
+   "fieldname": "to_employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "To Employee",
+   "options": "Employee"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-07 18:50:13.429382",
+ "modified_by": "Administrator",
+ "module": "Oerp Custom",
+ "name": "Tool Transfer Child Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
