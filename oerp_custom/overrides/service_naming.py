@@ -17,7 +17,6 @@ Purchase Order
 The series follows `purchase_type`:
 
     Service   ->  PUR-SER-.YYYY.-
-    Contract  ->  PUR-CON-.YYYY.-
     others    ->  whatever the user picked (default PUR-ORD-.YYYY.-)
 
 All of it is enforced here, so REST, Data Import and the bench console get the
@@ -36,7 +35,6 @@ MR_SERVICE_SERIES = "SER-MR-.YYYY.-"
 
 PO_SERIES_BY_TYPE = {
 	"Service": "PUR-SER-.YYYY.-",
-	"Contract": "PUR-CON-.YYYY.-",
 }
 
 

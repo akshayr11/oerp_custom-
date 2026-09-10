@@ -1,19 +1,22 @@
-// Purchase Order form: when purchase_type is "Contract", restrict the Supplier
-// link to suppliers holding a submitted Vendor Contract, and restrict the Items
-// table's Item link to that supplier's contracted items. For Contract POs, the
-// Rate and Amount columns are locked (read-only) so the price cannot drift off
-// what the contract dictates — everything else in the table stays editable.
+// Purchase Order form.
 //
-// Both restrictions are re-checked server-side in
-// oerp_custom.overrides.purchase_order — this file only shapes the dropdowns
-// and the grid's editability.
+// Vendor Contract on item rows
+// ----------------------------
+// Each Purchase Order Item row carries its own Vendor Contract link. Its
+// dropdown is narrowed twice: to the header's supplier, and to contracts that
+// actually list that row's item. When exactly one contract covers the item it
+// is filled in automatically; when several do, the row is left blank and the
+// (already filtered) dropdown is the pick list.
 //
-// Naming series follows the purchase type.
+// This is not tied to purchase_type — it applies to every Purchase Order.
+// Both conditions are re-checked server-side in
+// oerp_custom.overrides.purchase_order, since the API and Data Import never
+// touch this file.
 //
-//   Service  -> PUR-SER-.YYYY.-####      Contract -> PUR-CON-.YYYY.-####
-//   others   -> PUR-ORD-.YYYY.- (the standard default)
-//
-// The same mapping is enforced server-side in
+// Naming series
+// -------------
+// Service POs use PUR-SER-.YYYY.-####; everything else keeps the standard
+// PUR-ORD-.YYYY.- default. The same mapping is enforced server-side in
 // oerp_custom.overrides.service_naming.apply_po_naming, and a PO created from
 // a service Material Request arrives with type, service type and series
 // already set by the make_purchase_order override.
@@ -26,14 +29,12 @@
 
 const PO_SERIES_BY_TYPE = {
 	Service: "PUR-SER-.YYYY.-####",
-	Contract: "PUR-CON-.YYYY.-####",
 };
 const PO_DEFAULT_SERIES = "PUR-ORD-.YYYY.-";
 
 frappe.ui.form.on("Purchase Order", {
 	refresh(frm) {
-		set_contract_queries(frm);
-		set_items_editable(frm);
+		set_contract_query(frm);
 		set_service_type_from_items(frm);
 	},
 
@@ -42,17 +43,6 @@ frappe.ui.form.on("Purchase Order", {
 	},
 
 	purchase_type(frm) {
-		// Supplier and any existing rows are no longer guaranteed to be in scope.
-		if (frm.doc.supplier) {
-			frm.set_value("supplier", null);
-		}
-		clear_items(frm);
-		if (frm.doc.custom_vendor_contract) {
-			frm.set_value("custom_vendor_contract", null);
-		}
-		set_contract_queries(frm);
-		set_items_editable(frm);
-
 		if (!frm.is_new()) {
 			// The document is already numbered; the server will warn if the
 			// series no longer matches. Do not fight the name here.
@@ -65,115 +55,77 @@ frappe.ui.form.on("Purchase Order", {
 	},
 
 	supplier(frm) {
-		if (frm.doc.purchase_type === "Contract") {
-			clear_items(frm);
-			fetch_vendor_contract(frm);
-		} else if (frm.doc.custom_vendor_contract) {
-			frm.set_value("custom_vendor_contract", null);
-		}
-		set_contract_queries(frm);
+		// Every row's contract belonged to the previous supplier.
+		refresh_row_contracts(frm);
 	},
 });
 
 frappe.ui.form.on("Purchase Order Item", {
 	item_code(frm, cdt, cdn) {
 		const row = locals[cdt][cdn];
-		if (frm.doc.purchase_type !== "Contract" || !row.item_code || !frm.doc.supplier) {
-			return;
+
+		// The contract already on the row was resolved for the previous item
+		// and may not cover the new one — drop it before re-resolving.
+		if (row.custom_vendor_contract) {
+			frappe.model.set_value(cdt, cdn, "custom_vendor_contract", null);
 		}
 
-		// Pull the contracted rate so the order cannot silently drift off the
-		// agreed price. ERPNext's own price-list fetch fires too, so this runs
-		// after it and wins. Still relevant even with rate locked in the UI,
-		// since this writes programmatically, not through manual grid entry.
-		frappe.call({
-			method: "oerp_custom.queries.get_contract_item_details",
-			args: { vendor: frm.doc.supplier, item: row.item_code },
-			callback(r) {
-				if (!r.message || !r.message.rate) {
-					return;
-				}
-				frappe.model.set_value(cdt, cdn, "rate", r.message.rate);
-				if (r.message.uom) {
-					frappe.model.set_value(cdt, cdn, "uom", r.message.uom);
-				}
-			},
-		});
+		resolve_row_contract(frm, cdt, cdn);
 	},
 });
 
-function clear_items(frm) {
-	if ((frm.doc.items || []).some((row) => row.item_code)) {
-		frm.clear_table("items");
-		frm.refresh_field("items");
-	}
-}
-
-function set_items_editable(frm) {
-	const is_contract = frm.doc.purchase_type === "Contract";
-
-	// The grid itself stays fully usable — rows can still be added/removed
-	// and item_code picked normally. Only Rate and Amount are locked for
-	// Contract POs, since those must come from the contracted price rather
-	// than manual entry.
-	frm.set_df_property("items", "read_only", 0);
-
-	if (frm.fields_dict.items && frm.fields_dict.items.grid) {
-		frm.fields_dict.items.grid.update_docfield_property("rate", "read_only", is_contract ? 1 : 0);
-		frm.fields_dict.items.grid.update_docfield_property("amount", "read_only", is_contract ? 1 : 0);
-	}
-
-	frm.refresh_field("items");
-}
-
-function set_contract_queries(frm) {
-	if (frm.doc.purchase_type === "Contract") {
-		frm.set_query("supplier", () => ({
-			query: "oerp_custom.queries.contract_vendors",
-		}));
-
-		frm.set_query("custom_vendor_contract", () => ({
-			query: "oerp_custom.queries.vendor_contracts",
-			filters: { vendor: frm.doc.supplier },
-		}));
-
-		frm.set_query("item_code", "items", () => ({
-			query: "oerp_custom.queries.contract_items",
-			filters: {
-				vendor: frm.doc.supplier,
-				vendor_contract: frm.doc.custom_vendor_contract,
-			},
-		}));
-	} else {
-		// Restore the stock ERPNext behaviour.
-		frm.set_query("supplier", erpnext.queries.supplier);
-		frm.set_query("item_code", "items", () => ({
-			query: "erpnext.controllers.queries.item_query",
-			filters: { is_purchase_item: 1 },
-		}));
-	}
-}
-
-function fetch_vendor_contract(frm) {
-	if (!frm.doc.supplier) {
-		frm.set_value("custom_vendor_contract", null);
+function resolve_row_contract(frm, cdt, cdn) {
+	const row = locals[cdt][cdn];
+	if (!row || !row.item_code || !frm.doc.supplier) {
 		return;
 	}
 
-	// Reverse of a Fetch From: the link lives on Vendor Contract pointing at the
-	// supplier, not the other way round, so it has to be looked up server-side.
 	frappe.call({
-		method: "oerp_custom.queries.get_vendor_contract",
-		args: { vendor: frm.doc.supplier },
+		method: "oerp_custom.queries.get_contract_item_details",
+		args: { vendor: frm.doc.supplier, item: row.item_code },
 		callback(r) {
-			frm.set_value("custom_vendor_contract", r.message || null);
-			if (!r.message) {
+			const data = r.message || {};
+
+			if (data.contract) {
+				frappe.model.set_value(cdt, cdn, "custom_vendor_contract", data.contract);
+			} else if (data.contract_count > 1) {
+				// Left blank on purpose — the dropdown on this row is already
+				// filtered down to these, so the pick is a short one.
 				frappe.show_alert({
-					message: __("This supplier has more than one active contract — pick one."),
+					message: __("Row {0}: {1} contracts cover {2} — pick one.", [
+						row.idx,
+						data.contract_count,
+						row.item_code,
+					]),
 					indicator: "orange",
 				});
 			}
+			// contract_count === 0 is ordinary: the item is simply not under
+			// contract with this supplier, and the row stays blank in silence.
 		},
+	});
+}
+
+function refresh_row_contracts(frm) {
+	(frm.doc.items || []).forEach((row) => {
+		if (row.custom_vendor_contract) {
+			frappe.model.set_value(row.doctype, row.name, "custom_vendor_contract", null);
+		}
+		resolve_row_contract(frm, row.doctype, row.name);
+	});
+}
+
+function set_contract_query(frm) {
+	// This supplier's live contracts that list this row's item.
+	frm.set_query("custom_vendor_contract", "items", (doc, cdt, cdn) => {
+		const row = locals[cdt][cdn] || {};
+		return {
+			query: "oerp_custom.queries.vendor_contracts",
+			filters: {
+				vendor: doc.supplier,
+				item: row.item_code,
+			},
+		};
 	});
 }
 

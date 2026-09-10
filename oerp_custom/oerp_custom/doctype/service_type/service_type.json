@@ -3,15 +3,16 @@
  "allow_bulk_edit": 1,
  "allow_rename": 1,
  "autoname": "field:service_type_name",
- "creation": "2026-08-24 17:30:25.633192",
+ "creation": "2026-09-09 18:03:44.427220",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_bajo",
   "amended_from",
+  "service_category",
   "service_type_name",
   "service_type_description",
-  "expense_account"
+  "company_accounts"
  ],
  "fields": [
   {
@@ -29,6 +30,12 @@
    "search_index": 1
   },
   {
+   "fieldname": "service_category",
+   "fieldtype": "Link",
+   "label": "Service Category",
+   "options": "Item Group"
+  },
+  {
    "fieldname": "service_type_name",
    "fieldtype": "Data",
    "label": "Service Type Name",
@@ -40,17 +47,18 @@
    "label": "Service Type Description"
   },
   {
-   "fieldname": "expense_account",
-   "fieldtype": "Link",
-   "label": "Expense Account",
-   "options": "Account"
+   "fieldname": "company_accounts",
+   "fieldtype": "Table",
+   "label": "Company Accounts",
+   "options": "Service Type Account",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-31 14:19:51.384171",
+ "modified": "2026-09-09 18:03:44.427220",
  "modified_by": "Administrator",
  "module": "Oerp Custom",
  "name": "Service Type",

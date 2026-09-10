@@ -1,7 +1,6 @@
 // Purchase Receipt form: naming series follows purchase_type, same pattern as
-// Purchase Order. purchase_type, supplier, and custom_vendor_contract are
-// also pulled from the source Purchase Order when the Receipt is created via
-// "Get Items From" a PO.
+// Purchase Order. purchase_type and supplier are also pulled from the source
+// Purchase Order when the Receipt is created via "Get Items From" a PO.
 //
 //   Service  -> PREC-SER-.YYYY.-####      Contract -> PREC-CON-.YYYY.-####
 //   others   -> the standard default naming series for Purchase Receipt
@@ -53,19 +52,12 @@ function set_pr_details_from_source(frm) {
 		// Mapped from a Purchase Order — pull purchase_type, vendor and
 		// vendor contract from it.
 		frappe.db
-			.get_value("Purchase Order", po_row.purchase_order, [
-				"purchase_type",
-				"supplier",
-				"custom_vendor_contract",
-			])
+			.get_value("Purchase Order", po_row.purchase_order, ["purchase_type", "supplier"])
 			.then((r) => {
 				const data = r.message || {};
 
 				if (data.supplier && !frm.doc.supplier) {
 					frm.set_value("supplier", data.supplier);
-				}
-				if (data.custom_vendor_contract && !frm.doc.custom_vendor_contract) {
-					frm.set_value("custom_vendor_contract", data.custom_vendor_contract);
 				}
 
 				if (data.purchase_type && frm.doc.purchase_type !== data.purchase_type) {
