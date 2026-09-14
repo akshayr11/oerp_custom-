@@ -181,3 +181,21 @@ def get_contract_item_rate(contract, item):
 		"rate",
 	)
 	return rate
+
+
+
+@frappe.whitelist()
+def get_rfq_item_cost_center(request_for_quotation_item):
+	"""Return the cost_center saved on a specific Request for Quotation Item row.
+
+	Called from the Supplier Quotation item grid to backfill Cost Center when
+	items are pulled in from an RFQ. Uses a direct, unfiltered DB read for the
+	same reason as get_material_request_item_cost_center — child-table
+	doctypes have no independent Role Permission entries, so the client-side
+	get_value endpoint silently drops custom fields for non-Administrator roles.
+	"""
+	if not request_for_quotation_item:
+		return None
+	return frappe.db.get_value(
+		"Request for Quotation Item", request_for_quotation_item, "custom_cost_center"
+	)

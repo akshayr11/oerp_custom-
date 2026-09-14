@@ -25,13 +25,13 @@ frappe.ui.form.on('Request for Quotation', {
         // --- SQ Comparison button (submitted RFQs only) ---
         if (frm.doc.docstatus === 1) {
             frappe.call({
-                method: 'oerp_custom.oerp_custom.overrides.rfq.get_approved_supplier_quotations',
+                method: 'oerp_custom.overrides.rfq.get_approved_supplier_quotations',
                 args: { rfq: frm.doc.name }
             }).then(r => {
                 if (r.message) {
                     frm.add_custom_button('SQ Comparison', function() {
                         frappe.call({
-                            method: 'oerp_custom.oerp_custom.overrides.rfq.create_sq_comparison_from_rfq',
+                            method: 'oerp_custom.overrides.rfq.create_sq_comparison_from_rfq',
                             args: { rfq: frm.doc.name },
                             freeze: true,
                             freeze_message: 'Creating SQ Comparison...'

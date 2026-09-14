@@ -19,6 +19,20 @@ class ServiceType(Document):
         if not self.service_category:
             frappe.throw("Service Category is required")
 
+        # Guard against duplicate companies in the child table — ERPNext's
+        # Item Group Defaults enforces one row per company, so two rows here
+        # pointing at the same company would fail validation on save/insert.
+        seen_companies = set()
+        for row in self.company_accounts:
+            if not row.company:
+                continue
+            if row.company in seen_companies:
+                frappe.throw(
+                    f"Company <b>{row.company}</b> is listed more than once in Company Accounts. "
+                    "Each company can only appear once."
+                )
+            seen_companies.add(row.company)
+
         # Check if Item Group already exists
         item_group_name = frappe.db.exists(
             "Item Group",
@@ -55,6 +69,18 @@ class ServiceType(Document):
 
             if not row.expense_account:
                 continue
+
+            # The expense account must actually belong to this company —
+            # otherwise Item Group Defaults validation will reject it with
+            # an "Account does not belong to company" style error.
+            account_company = frappe.db.get_value("Account", row.expense_account, "company")
+            if account_company and account_company != row.company:
+                frappe.throw(
+                    f"Row for company <b>{row.company}</b>: Expense Account "
+                    f"<b>{row.expense_account}</b> belongs to company "
+                    f"<b>{account_company}</b>, not <b>{row.company}</b>. "
+                    "Please select an account that belongs to the same company."
+                )
 
             item_group.append("item_group_defaults", {
                 "company": row.company,
