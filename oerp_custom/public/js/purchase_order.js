@@ -8,6 +8,11 @@
 // is filled in automatically; when several do, the row is left blank and the
 // (already filtered) dropdown is the pick list.
 //
+// Whenever a row gets a contract — auto-resolved or picked manually — that
+// contract's rate for this item is pulled in too. The auto-resolve path gets
+// the rate for free from get_contract_item_details; a manual pick from the
+// dropdown triggers a small follow-up call via get_contract_item_rate.
+//
 // This is not tied to purchase_type — it applies to every Purchase Order.
 // Both conditions are re-checked server-side in
 // oerp_custom.overrides.purchase_order, since the API and Data Import never
@@ -72,6 +77,15 @@ frappe.ui.form.on("Purchase Order Item", {
 
 		resolve_row_contract(frm, cdt, cdn);
 	},
+
+	custom_vendor_contract(frm, cdt, cdn) {
+		// Only needed for a manual pick from the dropdown — the auto-resolve
+		// path in resolve_row_contract already sets the rate directly.
+		if (frm._skip_contract_rate_fetch) {
+			return;
+		}
+		fetch_contract_rate(frm, cdt, cdn);
+	},
 });
 
 function resolve_row_contract(frm, cdt, cdn) {
@@ -87,7 +101,16 @@ function resolve_row_contract(frm, cdt, cdn) {
 			const data = r.message || {};
 
 			if (data.contract) {
+				// Guard flag so the custom_vendor_contract trigger below
+				// doesn't fire a redundant get_contract_item_rate call —
+				// we already have the rate right here.
+				frm._skip_contract_rate_fetch = true;
 				frappe.model.set_value(cdt, cdn, "custom_vendor_contract", data.contract);
+				frm._skip_contract_rate_fetch = false;
+
+				if (data.rate !== undefined && data.rate !== null) {
+					frappe.model.set_value(cdt, cdn, "rate", data.rate);
+				}
 			} else if (data.contract_count > 1) {
 				// Left blank on purpose — the dropdown on this row is already
 				// filtered down to these, so the pick is a short one.
@@ -102,6 +125,24 @@ function resolve_row_contract(frm, cdt, cdn) {
 			}
 			// contract_count === 0 is ordinary: the item is simply not under
 			// contract with this supplier, and the row stays blank in silence.
+		},
+	});
+}
+
+function fetch_contract_rate(frm, cdt, cdn) {
+	const row = locals[cdt][cdn];
+	if (!row || !row.custom_vendor_contract || !row.item_code) {
+		return;
+	}
+
+	frappe.call({
+		method: "oerp_custom.queries.get_contract_item_rate",
+		args: { contract: row.custom_vendor_contract, item: row.item_code },
+		callback(r) {
+			const rate = r.message;
+			if (rate !== undefined && rate !== null) {
+				frappe.model.set_value(cdt, cdn, "rate", rate);
+			}
 		},
 	});
 }

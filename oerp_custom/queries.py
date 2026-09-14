@@ -168,3 +168,16 @@ def _live_contracts_for(vendor):
 		""",
 		{"vendor": vendor},
 	)
+
+
+
+
+@frappe.whitelist()
+def get_contract_item_rate(contract, item):
+	"""Return the contracted rate for `item` on `contract`, or None."""
+	rate = frappe.db.get_value(
+		"Vendor Contract Items Table",
+		{"parent": contract, "item": item},
+		"rate",
+	)
+	return rate
