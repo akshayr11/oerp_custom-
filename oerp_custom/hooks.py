@@ -54,6 +54,8 @@ doctype_js = {
     "Purchase Receipt": "public/js/purchase_receipt.js",
     "Request for Quotation": "public/js/rfq.js",
     "Supplier": "public/js/supplier.js",
+    "Supplier Quotation": "public/js/supplier_quotation.js",
+
     
 }
 
