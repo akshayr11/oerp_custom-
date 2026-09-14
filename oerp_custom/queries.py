@@ -181,20 +181,3 @@ def get_contract_item_rate(contract, item):
 		"rate",
 	)
 	return rate
-
-
-
-	@frappe.whitelist()
-def get_material_request_item_cost_center(material_request_item):
-	"""Return the cost_center saved on a specific Material Request Item row.
-
-	Called from the RFQ item grid to backfill Cost Center when items are
-	pulled in from a Material Request. Uses a direct, unfiltered DB read —
-	frappe.db.get_value called from JS goes through the client.get_value
-	whitelisted endpoint, which applies field-level permission filtering and
-	silently drops fields like this one on child-table doctypes that have no
-	independent Role Permission entries of their own.
-	"""
-	if not material_request_item:
-		return None
-	return frappe.db.get_value("Material Request Item", material_request_item, "cost_center")

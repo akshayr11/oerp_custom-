@@ -68,7 +68,7 @@ function fetch_cost_center(frm, cdt, cdn) {
     if (!row.material_request_item || row.custom_cost_center) return;
 
     frappe.call({
-        method: 'oerp_custom.oerp_custom.overrides.rfq.get_material_request_item_cost_center',
+        method: 'oerp_custom.overrides.rfq.get_material_request_item_cost_center',
         args: { material_request_item: row.material_request_item },
     }).then((r) => {
         const mr_cost_center = r && r.message ? r.message : null;
