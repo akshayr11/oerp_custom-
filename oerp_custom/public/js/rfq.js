@@ -85,8 +85,9 @@ function fetch_cost_center(frm, cdt, cdn) {
 
     frappe.db.get_value('Material Request Item', row.material_request_item, 'cost_center')
         .then((r) => {
-            console.log('[RFQ] get_value(Material Request Item) result:', r);
+            console.log('[RFQ] RAW get_value response:', JSON.stringify(r));
             const mr_cost_center = r && r.message ? r.message.cost_center : null;
+            console.log('[RFQ] Extracted mr_cost_center value:', JSON.stringify(mr_cost_center));
 
             if (mr_cost_center) {
                 frappe.model.set_value(cdt, cdn, 'custom_cost_center', mr_cost_center);
@@ -109,7 +110,7 @@ function apply_default_company_cost_center(frm, cdt, cdn) {
 
     frappe.db.get_value('Company', frm.doc.company, 'cost_center')
         .then((r) => {
-            console.log('[RFQ] get_value(Company) result:', r);
+            console.log('[RFQ] get_value(Company) result:', JSON.stringify(r));
             const default_cc = r && r.message ? r.message.cost_center : null;
             if (default_cc) {
                 frappe.model.set_value(cdt, cdn, 'custom_cost_center', default_cc);
