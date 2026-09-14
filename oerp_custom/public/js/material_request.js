@@ -7,7 +7,11 @@
 // Unticked: back to the standard series; the item dropdown only offers
 //           stock items (Maintain Stock on).
 //
-// Required By (schedule_date) auto-sets based on Priority:
+// Required By (schedule_date) auto-sets based on Priority, but only for
+// new/unsaved documents or when the user actively changes Priority — never
+// on a plain refresh of an already-saved document, since that would mark it
+// dirty (and block actions like "Create > Request for Quotation") just from
+// opening it.
 //      - Priority = "Default" -> Required By = Today + 7 days
 //      - Priority = "Urgent"  -> Required By = Today + 3 days
 //
@@ -24,7 +28,12 @@ frappe.ui.form.on("Material Request", {
 
 	refresh(frm) {
 		set_item_filter(frm);
-		set_required_by(frm);
+
+		// Only auto-populate Required By for brand-new documents. Opening an
+		// already-saved MR should never silently dirty the form.
+		if (frm.is_new()) {
+			set_required_by(frm);
+		}
 	},
 
 	custom_by_service_(frm) {
@@ -59,6 +68,8 @@ frappe.ui.form.on("Material Request", {
 	},
 
 	priority(frm) {
+		// User explicitly changed Priority — fine to recompute here, this is
+		// a deliberate edit, not a page load.
 		set_required_by(frm);
 	},
 });
