@@ -4,7 +4,12 @@
 //           mandatory_depends_on on the field), and the Item dropdown offers
 //           only service items (Maintain Stock off) that match the same
 //           Service Type selected on this Material Request.
-// Unticked: back to the standard series; the item dropdown is unrestricted.
+// Unticked: back to the standard series; the item dropdown only offers
+//           stock items (Maintain Stock on).
+//
+// Required By (schedule_date) auto-sets based on Priority:
+//      - Priority = "Default" -> Required By = Today + 7 days
+//      - Priority = "Urgent"  -> Required By = Today + 3 days
 //
 // Everything here is convenience — oerp_custom.overrides.service_naming
 // re-checks it all on validate, so API-created documents follow the same rules.
@@ -14,11 +19,12 @@ const MR_DEFAULT_SERIES = "MAT-MR-.YYYY.-";
 
 frappe.ui.form.on("Material Request", {
 	setup(frm) {
-		set_service_item_query(frm);
+		set_item_filter(frm);
 	},
 
 	refresh(frm) {
-		set_service_item_query(frm);
+		set_item_filter(frm);
+		set_required_by(frm);
 	},
 
 	custom_by_service_(frm) {
@@ -43,19 +49,24 @@ frappe.ui.form.on("Material Request", {
 				frm.set_value("custom_service_type", null);
 			}
 		}
-		set_service_item_query(frm);
+		set_item_filter(frm);
 	},
 
 	// Re-filter the moment the Service Type changes, so the dropdown always
 	// reflects the currently selected type (not just at load/refresh).
 	custom_service_type(frm) {
-		set_service_item_query(frm);
+		set_item_filter(frm);
+	},
+
+	priority(frm) {
+		set_required_by(frm);
 	},
 });
 
-function set_service_item_query(frm) {
+function set_item_filter(frm) {
 	frm.set_query("item_code", "items", () => {
 		const filters = { disabled: 0 };
+
 		if (frm.doc.custom_by_service_) {
 			// Service items are the ones that do not maintain stock.
 			filters.is_stock_item = 0;
@@ -65,8 +76,36 @@ function set_service_item_query(frm) {
 			if (frm.doc.custom_service_type) {
 				filters.custom_service_type = frm.doc.custom_service_type;
 			}
+		} else {
+			// Standard (non-service) request — stock items only.
+			filters.is_stock_item = 1;
 		}
+
 		return { filters };
+	});
+}
+
+function set_required_by(frm) {
+	let days = null;
+
+	if (frm.doc.priority === "Urgent") {
+		days = 3;
+	} else if (frm.doc.priority === "Default") {
+		days = 7;
+	}
+
+	if (days === null) {
+		return;
+	}
+
+	let new_date = frappe.datetime.add_days(frappe.datetime.get_today(), days);
+
+	// Set header-level Required By (schedule_date)
+	frm.set_value("schedule_date", new_date);
+
+	// Also update Required By on every item row
+	(frm.doc.items || []).forEach(function (row) {
+		frappe.model.set_value(row.doctype, row.name, "schedule_date", new_date);
 	});
 }
 

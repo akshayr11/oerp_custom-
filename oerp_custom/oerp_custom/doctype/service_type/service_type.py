@@ -58,7 +58,16 @@ class ServiceType(Document):
 
             item_group.append("item_group_defaults", {
                 "company": row.company,
-                "expense_account": row.expense_account
+                "expense_account": row.expense_account,
+                # Explicitly cleared so Frappe's fetch_from doesn't silently
+                # pull a mismatched Default Warehouse (or other company
+                # defaults) from the Company master and fail validation
+                # against this row's own company.
+                "default_warehouse": None,
+                "buying_cost_center": None,
+                "selling_cost_center": None,
+                "default_price_list": None,
+                "default_supplier": None,
             })
 
         # Save / Insert Item Group
