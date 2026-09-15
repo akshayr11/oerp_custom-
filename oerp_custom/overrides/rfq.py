@@ -49,6 +49,7 @@ def create_sq_comparison_from_rfq(rfq):
 
     comparison = frappe.new_doc("SQ Comparison")
     comparison.request_for_quotation = rfq
+    comparison.date = frappe.utils.today()
 
     for item in sq_items:
         if item.parent not in approved_map:
