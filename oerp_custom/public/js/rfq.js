@@ -62,7 +62,7 @@ frappe.ui.form.on('Request for Quotation Item', {
     }
 });
 
-function fetch_cost_center(frm, cdt, cdn) {
+function fetch_cost_center(frm, cdt, cdn, silent = false) {
     const row = locals[cdt][cdn];
 
     if (!row.material_request_item || row.custom_cost_center) return;
@@ -74,24 +74,24 @@ function fetch_cost_center(frm, cdt, cdn) {
         const mr_cost_center = r && r.message ? r.message : null;
 
         if (mr_cost_center) {
-            frappe.model.set_value(cdt, cdn, 'custom_cost_center', mr_cost_center);
+            frappe.model.set_value(cdt, cdn, 'custom_cost_center', mr_cost_center, null, silent);
         } else {
             // fallback to company's default cost center
-            apply_default_company_cost_center(frm, cdt, cdn);
+            apply_default_company_cost_center(frm, cdt, cdn, silent);
         }
     }).catch((err) => {
         console.error('get_material_request_item_cost_center failed:', err);
     });
 }
 
-function apply_default_company_cost_center(frm, cdt, cdn) {
+function apply_default_company_cost_center(frm, cdt, cdn, silent = false) {
     if (!frm.doc.company) return;
 
     frappe.db.get_value('Company', frm.doc.company, 'cost_center')
         .then((r) => {
             const default_cc = r && r.message ? r.message.cost_center : null;
             if (default_cc) {
-                frappe.model.set_value(cdt, cdn, 'custom_cost_center', default_cc);
+                frappe.model.set_value(cdt, cdn, 'custom_cost_center', default_cc, null, silent);
             }
         })
         .catch((err) => {
@@ -100,7 +100,13 @@ function apply_default_company_cost_center(frm, cdt, cdn) {
 }
 
 function backfill_all_cost_centers(frm) {
+    // Runs on every refresh, including the one right after a successful
+    // save. Marking the form dirty here (the default for
+    // frappe.model.set_value) would race the save the user just did — the
+    // async lookup can resolve just after reload and flip the form back to
+    // "Not Saved", making it look like Save doesn't work. Fill silently;
+    // the value still goes out with the next real save.
     (frm.doc.items || []).forEach((row) => {
-        fetch_cost_center(frm, row.doctype, row.name);
+        fetch_cost_center(frm, row.doctype, row.name, true);
     });
 }
