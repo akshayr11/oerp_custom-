@@ -1,6 +1,6 @@
 // Material Request: the "By Service" checkbox.
 //
-// Ticked:   series SER-MR-.YYYY.-####, Service Type mandatory (via
+// Ticked:   series SER-MR-.YYYY.-, Service Type mandatory (via
 //           mandatory_depends_on on the field), and the Item dropdown offers
 //           only service items (Maintain Stock off) that match the same
 //           Service Type selected on this Material Request.
@@ -17,8 +17,15 @@
 //
 // Everything here is convenience — oerp_custom.overrides.service_naming
 // re-checks it all on validate, so API-created documents follow the same rules.
+//
+// NOTE: MR_SERVICE_SERIES below must stay byte-for-byte identical to
+// MR_SERVICE_SERIES in service_naming.py. The server overwrites naming_series
+// in before_insert regardless of what the client set, so a mismatch here
+// won't corrupt saved data — but it will show the wrong value in the Naming
+// Series field for the moment before save, and may not match a registered
+// series option.
 
-const MR_SERVICE_SERIES = "SER-MR-.YYYY.-####";
+const MR_SERVICE_SERIES = "SER-MR-.YYYY.-";
 const MR_DEFAULT_SERIES = "MAT-MR-.YYYY.-";
 
 frappe.ui.form.on("Material Request", {
@@ -34,6 +41,17 @@ frappe.ui.form.on("Material Request", {
 		if (frm.is_new()) {
 			set_required_by(frm);
 		}
+
+		// Rows added via "Get Items From" (BOM / Sales Order) are inserted
+		// with frappe.model.add_child + direct property assignment, which
+		// never fires the "item_code" row trigger below — so those rows
+		// would otherwise never get a Last Purchase UOM. Backfill any row
+		// that has an item but no UOM yet, same as fetch_from self-heals.
+		(frm.doc.items || []).forEach((row) => {
+			if (row.item_code && !row.custom_last_purchase_uom) {
+				update_last_purchase_uom(frm, row.doctype, row.name);
+			}
+		});
 	},
 
 	custom_by_service_(frm) {
@@ -120,14 +138,29 @@ function set_required_by(frm) {
 	});
 }
 
-// --- Per-warehouse Min/Max Qty lookup ---
+// --- Per-warehouse Min/Max Qty lookup, and Last Purchase UOM ---
 //
 // min_qty / max_qty on Material Request Item come from the item's
 // "Re-order Levels" child table (Item Reorder), matched by the row's
 // warehouse, and refresh whenever the item or warehouse changes.
+//
+// custom_last_purchase_uom mirrors core's own last_purchase_price behavior:
+// it looks up the UOM used on the item's most recent submitted Purchase
+// Invoice (falling back to Purchase Receipt if the item was only ever
+// received, never separately invoiced), so buyers can see at a glance what
+// unit it's normally bought in.
 frappe.ui.form.on("Material Request Item", {
 	item_code(frm, cdt, cdn) {
+		if (!locals[cdt][cdn].item_code) {
+			// Item was cleared on this row — clear the derived fields too,
+			// rather than leaving stale values from the previous item_code.
+			frappe.model.set_value(cdt, cdn, "min_qty", null);
+			frappe.model.set_value(cdt, cdn, "max_qty", null);
+			frappe.model.set_value(cdt, cdn, "custom_last_purchase_uom", null);
+			return;
+		}
 		update_qty_levels(frm, cdt, cdn);
+		update_last_purchase_uom(frm, cdt, cdn);
 	},
 	warehouse(frm, cdt, cdn) {
 		update_qty_levels(frm, cdt, cdn);
@@ -164,5 +197,40 @@ function update_qty_levels(frm, cdt, cdn) {
 			frappe.model.set_value(cdt, cdn, "min_qty", level ? level.warehouse_reorder_level : null);
 			frappe.model.set_value(cdt, cdn, "max_qty", level ? level.warehouse_reorder_qty : null);
 		},
+	});
+}
+
+function update_last_purchase_uom(frm, cdt, cdn) {
+	const row = locals[cdt][cdn];
+
+	if (!row.item_code) {
+		frappe.model.set_value(cdt, cdn, "custom_last_purchase_uom", null);
+		return;
+	}
+
+	const item_code = row.item_code;
+
+	frappe.call({
+		method: "oerp_custom.overrides.service_naming.get_last_purchase_uom",
+		args: {
+			item_code: item_code
+		},
+		callback(r) {
+			const current = locals[cdt][cdn];
+
+			if (!current || current.item_code !== item_code) {
+				return;
+			}
+
+			frappe.model.set_value(
+				cdt,
+				cdn,
+				"custom_last_purchase_uom",
+				r.message || null
+			);
+		},
+		error(r) {
+			console.error("Failed to get last purchase UOM:", r);
+		}
 	});
 }

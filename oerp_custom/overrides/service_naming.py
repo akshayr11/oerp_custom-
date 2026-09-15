@@ -26,6 +26,12 @@ Timing matters: frappe names a document BEFORE validate runs on insert, so the
 series is fixed in `before_insert` (early enough to shape the name) and only
 verified in `validate` (where a mismatch after naming becomes a warning, never
 a rename — renaming a numbered document would orphan every link to it).
+
+NOTE: MR_SERVICE_SERIES below must stay byte-for-byte identical to the
+MR_SERVICE_SERIES constant in service_naming.js. This server value is what
+actually gets written to the document (before_insert overwrites whatever the
+client set), but a mismatch still shows the wrong series in the form UI
+before save.
 """
 
 import frappe
@@ -168,3 +174,56 @@ def _apply_series(doc, series):
 			indicator="orange",
 			alert=True,
 		)
+
+
+@frappe.whitelist()
+def get_last_purchase_uom(item_code):
+    """UOM used on the most recent submitted purchase document for this item.
+
+    Checks Purchase Order, Purchase Receipt and Purchase Invoice (an item may
+    only ever have been received or invoiced without a formal PO) and returns
+    whichever is most recent.
+    """
+    if not item_code:
+        return None
+
+    row = frappe.db.sql(
+        """
+        SELECT uom
+        FROM (
+            SELECT poi.uom AS uom, po.transaction_date AS purchase_date, po.creation AS purchase_creation
+            FROM `tabPurchase Order Item` poi
+            INNER JOIN `tabPurchase Order` po ON po.name = poi.parent
+            WHERE poi.item_code = %(item_code)s
+                AND po.docstatus = 1
+                AND poi.uom IS NOT NULL
+                AND poi.uom != ''
+
+            UNION ALL
+
+            SELECT pri.uom AS uom, pr.posting_date AS purchase_date, pr.creation AS purchase_creation
+            FROM `tabPurchase Receipt Item` pri
+            INNER JOIN `tabPurchase Receipt` pr ON pr.name = pri.parent
+            WHERE pri.item_code = %(item_code)s
+                AND pr.docstatus = 1
+                AND pri.uom IS NOT NULL
+                AND pri.uom != ''
+
+            UNION ALL
+
+            SELECT pii.uom AS uom, pi.posting_date AS purchase_date, pi.creation AS purchase_creation
+            FROM `tabPurchase Invoice Item` pii
+            INNER JOIN `tabPurchase Invoice` pi ON pi.name = pii.parent
+            WHERE pii.item_code = %(item_code)s
+                AND pi.docstatus = 1
+                AND pii.uom IS NOT NULL
+                AND pii.uom != ''
+        ) combined
+        ORDER BY purchase_date DESC, purchase_creation DESC
+        LIMIT 1
+        """,
+        {"item_code": item_code},
+        as_dict=True,
+    )
+
+    return row[0].uom if row else None

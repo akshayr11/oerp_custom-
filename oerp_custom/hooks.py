@@ -88,6 +88,8 @@ doc_events = {
 override_whitelisted_methods = {
     "erpnext.stock.doctype.material_request.material_request.make_purchase_order":
         "oerp_custom.overrides.service_naming.make_purchase_order",
+    "erpnext.stock.get_item_details.get_item_details":
+        "oerp_custom.overrides.get_item_details_patch.get_item_details",
 }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
