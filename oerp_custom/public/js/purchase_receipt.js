@@ -38,12 +38,20 @@ function set_pr_details_from_source(frm) {
 
 	if (po_row && po_row.purchase_order) {
 		frappe.db
-			.get_value("Purchase Order", po_row.purchase_order, ["purchase_type", "supplier"])
+			.get_value("Purchase Order", po_row.purchase_order, [
+				"purchase_type",
+				"supplier",
+				"custom_service_type",
+			])
 			.then((r) => {
 				const data = r.message || {};
 
 				if (data.supplier && !frm.doc.supplier) {
 					frm.set_value("supplier", data.supplier);
+				}
+
+				if (data.custom_service_type && !frm.doc.custom_service_type) {
+					frm.set_value("custom_service_type", data.custom_service_type);
 				}
 
 				if (data.purchase_type && frm.doc.purchase_type !== data.purchase_type) {
