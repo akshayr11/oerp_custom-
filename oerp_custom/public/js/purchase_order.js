@@ -13,6 +13,11 @@
 // the rate for free from get_contract_item_details; a manual pick from the
 // dropdown triggers a small follow-up call via get_contract_item_rate.
 //
+// The reverse also holds: whenever a row ends up WITHOUT a contract — cleared
+// by hand, or resolve_row_contract finding none (or several, left for the
+// user to pick) — the rate is reset to that row's own price_list_rate, so it
+// never keeps a stale contract rate that no longer applies.
+//
 // This is not tied to purchase_type — it applies to every Purchase Order.
 // Both conditions are re-checked server-side in
 // oerp_custom.overrides.purchase_order, since the API and Data Import never
@@ -84,7 +89,15 @@ frappe.ui.form.on("Purchase Order Item", {
 		if (frm._skip_contract_rate_fetch) {
 			return;
 		}
-		fetch_contract_rate(frm, cdt, cdn);
+
+		const row = locals[cdt][cdn];
+		if (row.custom_vendor_contract) {
+			fetch_contract_rate(frm, cdt, cdn);
+		} else {
+			// Contract was cleared — the rate must not stay pinned to a
+			// contract that no longer applies to this row.
+			reset_rate_to_price_list(frm, cdt, cdn);
+		}
 	},
 });
 
@@ -123,10 +136,22 @@ function resolve_row_contract(frm, cdt, cdn) {
 					indicator: "orange",
 				});
 			}
-			// contract_count === 0 is ordinary: the item is simply not under
-			// contract with this supplier, and the row stays blank in silence.
+			// contract_count === 0 or ambiguous (>1): no contract applies to
+			// this row (yet), so the rate must not be left over from a
+			// previous contract or a previous item/supplier.
+			if (!data.contract) {
+				reset_rate_to_price_list(frm, cdt, cdn);
+			}
 		},
 	});
+}
+
+function reset_rate_to_price_list(frm, cdt, cdn) {
+	const row = locals[cdt][cdn];
+	if (!row) {
+		return;
+	}
+	frappe.model.set_value(cdt, cdn, "rate", row.price_list_rate || 0);
 }
 
 function fetch_contract_rate(frm, cdt, cdn) {
