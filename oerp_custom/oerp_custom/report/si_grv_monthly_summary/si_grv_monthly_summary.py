@@ -48,15 +48,27 @@ def get_data(filters):
 
 	months_str = ",".join(month_numbers)
 
+	# pri.amount is the item's pre-tax net amount. GRV value must reflect the
+	# PR's Grand Total (after taxes and charges), so each item's amount is
+	# scaled by that PR's (base_grand_total / base_net_total) ratio before
+	# being bucketed into asset/material/service — this prorates the
+	# document-level tax down to item level without needing itemised tax
+	# breakup, and the category totals still sum to the PR's actual Grand Total.
 	query = """
 		WITH grv AS (
 			SELECT
 				pri.cost_center AS cost_center,
 				YEAR(pr.posting_date) AS year,
 				MONTH(pr.posting_date) AS month,
-				SUM(CASE WHEN it.is_fixed_asset = 1 THEN pri.amount ELSE 0 END) AS asset_value,
-				SUM(CASE WHEN it.is_fixed_asset = 0 AND it.is_stock_item = 1 THEN pri.amount ELSE 0 END) AS material_value,
-				SUM(CASE WHEN it.is_fixed_asset = 0 AND it.is_stock_item = 0 THEN pri.amount ELSE 0 END) AS service_value
+				SUM(CASE WHEN it.is_fixed_asset = 1
+					THEN pri.amount * (pr.base_grand_total / NULLIF(pr.base_net_total, 0))
+					ELSE 0 END) AS asset_value,
+				SUM(CASE WHEN it.is_fixed_asset = 0 AND it.is_stock_item = 1
+					THEN pri.amount * (pr.base_grand_total / NULLIF(pr.base_net_total, 0))
+					ELSE 0 END) AS material_value,
+				SUM(CASE WHEN it.is_fixed_asset = 0 AND it.is_stock_item = 0
+					THEN pri.amount * (pr.base_grand_total / NULLIF(pr.base_net_total, 0))
+					ELSE 0 END) AS service_value
 			FROM `tabPurchase Receipt Item` pri
 			INNER JOIN `tabPurchase Receipt` pr ON pr.name = pri.parent
 			LEFT JOIN `tabItem` it ON it.name = pri.item_code
