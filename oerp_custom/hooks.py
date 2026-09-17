@@ -56,6 +56,7 @@ doctype_js = {
     "Supplier": "public/js/supplier.js",
     "Supplier Quotation": "public/js/supplier_quotation.js",
     "Payment Entry": "public/js/payment_entry.js",
+    "Item": "public/js/item.js",
 }
 
 doc_events = {
@@ -78,7 +79,11 @@ doc_events = {
         "on_submit": "oerp_custom.overrides.stock_entry.create_tool_registry_records"
     },
     "Item": {
-        "validate": "oerp_custom.overrides.item.sync_qty_level_to_reorder"
+        "validate": [
+            "oerp_custom.overrides.item.sync_qty_level_to_reorder",
+            # Item Group mirrors the selected Service Type's own category.
+            "oerp_custom.overrides.item.sync_item_group_from_service_type",
+        ]
     }
 }
 
