@@ -87,6 +87,22 @@ doc_events = {
     }
 }
 
+# Data records this app depends on but that don't live in any doctype/*.json
+# file: the Fleet Hiring Request approval roles and its Workflow (states +
+# transitions). Exported so `bench migrate` recreates them on any site,
+# instead of relying on the one-off setup_workflow.run script having been
+# run there by hand.
+fixtures = [
+    {"dt": "Role", "filters": [["name", "in", ["Site Manager", "Contract Manager", "Transport Officer"]]]},
+    {
+        "dt": "Workflow State",
+        "filters": [
+            ["name", "in", ["Site Manager Approval", "Contract Manager Approval", "Transport Officer Final Approval"]]
+        ],
+    },
+    {"dt": "Workflow", "filters": [["name", "in", ["Fleet Hiring Request", "Hiring Contract"]]]},
+]
+
 # A PO raised from a service Material Request arrives already typed as Service,
 # with the Service Type and the PUR-SER series carried across.
 override_whitelisted_methods = {

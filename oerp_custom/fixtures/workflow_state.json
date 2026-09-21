@@ -1,0 +1,29 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-09-21 10:03:18.443009",
+  "name": "Site Manager Approval",
+  "style": "",
+  "workflow_state_name": "Site Manager Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-09-21 10:03:18.659324",
+  "name": "Contract Manager Approval",
+  "style": "",
+  "workflow_state_name": "Contract Manager Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-09-21 10:03:18.661233",
+  "name": "Transport Officer Final Approval",
+  "style": "",
+  "workflow_state_name": "Transport Officer Final Approval"
+ }
+]

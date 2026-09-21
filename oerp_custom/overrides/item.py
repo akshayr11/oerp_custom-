@@ -4,14 +4,20 @@ DEFAULT_REQUEST_TYPE = "Purchase"
 
 
 def sync_item_group_from_service_type(doc, method=None):
-	"""Item Group mirrors the selected Service Type value directly.
+	"""Item Group (labelled "Item Sub Category" on the form) mirrors the
+	selected Service Type value directly, and Item Main Category
+	(fieldname item_sub_category — named the opposite of its own label)
+	is set to that Item Group's own parent in the Item Group tree.
 
-	Note: item_group is a Link to Item Group, so this only succeeds if an
-	Item Group named exactly the same as the Service Type already exists —
-	otherwise the save fails with an invalid-link error on item_group.
+	Note: item_group is a Link to Item Group, so the first part only
+	succeeds if an Item Group named exactly the same as the Service Type
+	already exists — otherwise the save fails with an invalid-link error.
 	"""
-	if doc.custom_service_type:
-		doc.item_group = doc.custom_service_type
+	if not doc.custom_service_type:
+		return
+
+	doc.item_group = doc.custom_service_type
+	doc.item_sub_category = frappe.db.get_value("Item Group", doc.item_group, "parent_item_group")
 
 
 def sync_qty_level_to_reorder(doc, method=None):
