@@ -3,9 +3,12 @@
 
 """Create a (submitted) Service Purchase Order from an approved Hiring Contract.
 
-Only available once the contract's workflow_state is "Approved" (the single
-approval level's final state — see
-oerp_custom.oerp_custom.doctype.hiring_contract.setup_workflow).
+Called automatically from HiringContract.on_submit — submitting only
+happens via the workflow's Approve transition (the single approval level's
+final state, see
+oerp_custom.oerp_custom.doctype.hiring_contract.setup_workflow), so this
+runs the moment the contract is approved, in the same transaction. No
+separate button or manual step.
 
 Item, Qty, UOM and Rate come straight from the contract's own item rows —
 nothing is left for the user to review, so unlike the Fleet Hiring Request ->

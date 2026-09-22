@@ -5,13 +5,13 @@
   "document_type": "Fleet Hiring Request",
   "enable_action_confirmation": 0,
   "is_active": 1,
-  "modified": "2026-09-21 10:03:18.667272",
+  "modified": "2026-09-22 11:27:53.955886",
   "name": "Fleet Hiring Request",
   "override_status": 0,
   "send_email_alert": 0,
   "states": [
    {
-    "allow_edit": "Employee",
+    "allow_edit": "System Manager",
     "avoid_status_override": 0,
     "doc_status": "0",
     "evaluate_as_expression": 0,
@@ -25,7 +25,7 @@
     "workflow_builder_id": null
    },
    {
-    "allow_edit": "Site Manager",
+    "allow_edit": "System Manager",
     "avoid_status_override": 0,
     "doc_status": "0",
     "evaluate_as_expression": 0,
@@ -39,7 +39,7 @@
     "workflow_builder_id": null
    },
    {
-    "allow_edit": "Contract Manager",
+    "allow_edit": "System Manager",
     "avoid_status_override": 0,
     "doc_status": "0",
     "evaluate_as_expression": 0,
@@ -53,7 +53,7 @@
     "workflow_builder_id": null
    },
    {
-    "allow_edit": "Transport Officer",
+    "allow_edit": "System Manager",
     "avoid_status_override": 0,
     "doc_status": "0",
     "evaluate_as_expression": 0,
@@ -113,7 +113,7 @@
    {
     "action": "Review",
     "allow_self_approval": 1,
-    "allowed": "Employee",
+    "allowed": "System Manager",
     "condition": null,
     "next_state": "Site Manager Approval",
     "send_email_to_creator": 0,
@@ -124,7 +124,7 @@
    {
     "action": "Approve",
     "allow_self_approval": 1,
-    "allowed": "Site Manager",
+    "allowed": "System Manager",
     "condition": null,
     "next_state": "Contract Manager Approval",
     "send_email_to_creator": 0,
@@ -135,7 +135,7 @@
    {
     "action": "Reject",
     "allow_self_approval": 1,
-    "allowed": "Site Manager",
+    "allowed": "System Manager",
     "condition": null,
     "next_state": "Rejected",
     "send_email_to_creator": 0,
@@ -146,7 +146,7 @@
    {
     "action": "Approve",
     "allow_self_approval": 1,
-    "allowed": "Contract Manager",
+    "allowed": "System Manager",
     "condition": null,
     "next_state": "Transport Officer Final Approval",
     "send_email_to_creator": 0,
@@ -157,7 +157,7 @@
    {
     "action": "Reject",
     "allow_self_approval": 1,
-    "allowed": "Contract Manager",
+    "allowed": "System Manager",
     "condition": null,
     "next_state": "Rejected",
     "send_email_to_creator": 0,
@@ -168,7 +168,7 @@
    {
     "action": "Approve",
     "allow_self_approval": 1,
-    "allowed": "Transport Officer",
+    "allowed": "System Manager",
     "condition": null,
     "next_state": "Approved",
     "send_email_to_creator": 0,
@@ -179,7 +179,7 @@
    {
     "action": "Reject",
     "allow_self_approval": 1,
-    "allowed": "Transport Officer",
+    "allowed": "System Manager",
     "condition": null,
     "next_state": "Rejected",
     "send_email_to_creator": 0,
@@ -209,13 +209,13 @@
   "document_type": "Hiring Contract",
   "enable_action_confirmation": 0,
   "is_active": 1,
-  "modified": "2026-09-21 12:59:50.132544",
+  "modified": "2026-09-22 11:27:57.084705",
   "name": "Hiring Contract",
   "override_status": 0,
   "send_email_alert": 0,
   "states": [
    {
-    "allow_edit": "Transport Officer",
+    "allow_edit": "System Manager",
     "avoid_status_override": 0,
     "doc_status": "0",
     "evaluate_as_expression": 0,
@@ -229,7 +229,7 @@
     "workflow_builder_id": null
    },
    {
-    "allow_edit": "Contract Manager",
+    "allow_edit": "System Manager",
     "avoid_status_override": 0,
     "doc_status": "0",
     "evaluate_as_expression": 0,
@@ -275,7 +275,7 @@
    {
     "action": "Review",
     "allow_self_approval": 1,
-    "allowed": "Transport Officer",
+    "allowed": "System Manager",
     "condition": null,
     "next_state": "Contract Manager Approval",
     "send_email_to_creator": 0,
@@ -286,7 +286,7 @@
    {
     "action": "Approve",
     "allow_self_approval": 1,
-    "allowed": "Contract Manager",
+    "allowed": "System Manager",
     "condition": null,
     "next_state": "Approved",
     "send_email_to_creator": 0,
@@ -297,7 +297,7 @@
    {
     "action": "Reject",
     "allow_self_approval": 1,
-    "allowed": "Contract Manager",
+    "allowed": "System Manager",
     "condition": null,
     "next_state": "Rejected",
     "send_email_to_creator": 0,
@@ -308,6 +308,220 @@
   ],
   "workflow_data": null,
   "workflow_name": "Hiring Contract",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Contract Extension",
+  "enable_action_confirmation": 0,
+  "is_active": 1,
+  "modified": "2026-09-22 11:27:59.760724",
+  "name": "Contract Extension",
+  "override_status": 0,
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "System Manager",
+    "avoid_status_override": 0,
+    "doc_status": "0",
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Draft",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   },
+   {
+    "allow_edit": "System Manager",
+    "avoid_status_override": 0,
+    "doc_status": "0",
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Contract Manager Approval",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   },
+   {
+    "allow_edit": "System Manager",
+    "avoid_status_override": 0,
+    "doc_status": "1",
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Approved",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   },
+   {
+    "allow_edit": "System Manager",
+    "avoid_status_override": 0,
+    "doc_status": "0",
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Rejected",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Review",
+    "allow_self_approval": 1,
+    "allowed": "System Manager",
+    "condition": null,
+    "next_state": "Contract Manager Approval",
+    "send_email_to_creator": 0,
+    "state": "Draft",
+    "transition_tasks": null,
+    "workflow_builder_id": null
+   },
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "System Manager",
+    "condition": null,
+    "next_state": "Approved",
+    "send_email_to_creator": 0,
+    "state": "Contract Manager Approval",
+    "transition_tasks": null,
+    "workflow_builder_id": null
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "System Manager",
+    "condition": null,
+    "next_state": "Rejected",
+    "send_email_to_creator": 0,
+    "state": "Contract Manager Approval",
+    "transition_tasks": null,
+    "workflow_builder_id": null
+   }
+  ],
+  "workflow_data": null,
+  "workflow_name": "Contract Extension",
+  "workflow_state_field": "workflow_state"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Equipment Timesheet",
+  "enable_action_confirmation": 0,
+  "is_active": 1,
+  "modified": "2026-09-22 11:28:02.474292",
+  "name": "Equipment Timesheet",
+  "override_status": 0,
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "System Manager",
+    "avoid_status_override": 0,
+    "doc_status": "0",
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Draft",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   },
+   {
+    "allow_edit": "System Manager",
+    "avoid_status_override": 0,
+    "doc_status": "0",
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Transport Officer Final Approval",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   },
+   {
+    "allow_edit": "System Manager",
+    "avoid_status_override": 0,
+    "doc_status": "1",
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Approved",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   },
+   {
+    "allow_edit": "System Manager",
+    "avoid_status_override": 0,
+    "doc_status": "0",
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Rejected",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Review",
+    "allow_self_approval": 1,
+    "allowed": "System Manager",
+    "condition": null,
+    "next_state": "Transport Officer Final Approval",
+    "send_email_to_creator": 0,
+    "state": "Draft",
+    "transition_tasks": null,
+    "workflow_builder_id": null
+   },
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "System Manager",
+    "condition": null,
+    "next_state": "Approved",
+    "send_email_to_creator": 0,
+    "state": "Transport Officer Final Approval",
+    "transition_tasks": null,
+    "workflow_builder_id": null
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "System Manager",
+    "condition": null,
+    "next_state": "Rejected",
+    "send_email_to_creator": 0,
+    "state": "Transport Officer Final Approval",
+    "transition_tasks": null,
+    "workflow_builder_id": null
+   }
+  ],
+  "workflow_data": null,
+  "workflow_name": "Equipment Timesheet",
   "workflow_state_field": "workflow_state"
  }
 ]
