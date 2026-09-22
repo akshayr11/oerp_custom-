@@ -88,19 +88,25 @@ doc_events = {
 }
 
 # Data records this app depends on but that don't live in any doctype/*.json
-# file: the Fleet Hiring Request approval roles and its Workflow (states +
-# transitions). Exported so `bench migrate` recreates them on any site,
-# instead of relying on the one-off setup_workflow.run script having been
-# run there by hand.
+# file: the Workflow States (approval-stage names, not roles) and Workflows
+# for the Transport module doctypes. Exported so `bench migrate` recreates
+# them on any site, instead of relying on the one-off setup_workflow.run
+# scripts having been run there by hand.
+#
+# No Role fixture: every workflow transition and DocPerm here uses System
+# Manager only — no roles/permissions spec was given, so nothing is gated by
+# an invented role. Wire up real roles once you have them.
 fixtures = [
-    {"dt": "Role", "filters": [["name", "in", ["Site Manager", "Contract Manager", "Transport Officer"]]]},
     {
         "dt": "Workflow State",
         "filters": [
             ["name", "in", ["Site Manager Approval", "Contract Manager Approval", "Transport Officer Final Approval"]]
         ],
     },
-    {"dt": "Workflow", "filters": [["name", "in", ["Fleet Hiring Request", "Hiring Contract"]]]},
+    {
+        "dt": "Workflow",
+        "filters": [["name", "in", ["Fleet Hiring Request", "Hiring Contract", "Contract Extension", "Equipment Timesheet"]]],
+    },
 ]
 
 # A PO raised from a service Material Request arrives already typed as Service,

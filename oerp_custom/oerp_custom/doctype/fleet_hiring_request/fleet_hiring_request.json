@@ -24,6 +24,13 @@
   "equipment",
   "section_break_attachments",
   "attachments",
+  "section_break_contract",
+  "hiring_contract",
+  "contract_vendor",
+  "column_break_contract",
+  "contract_value",
+  "contract_start_date",
+  "contract_end_date",
   "section_break_rejection",
   "rejection_remarks"
  ],
@@ -126,6 +133,52 @@
    "label": "Attachments"
   },
   {
+   "fieldname": "section_break_contract",
+   "fieldtype": "Section Break",
+   "label": "Hiring Contract"
+  },
+  {
+   "description": "Set automatically once a Hiring Contract is created from this request.",
+   "fieldname": "hiring_contract",
+   "fieldtype": "Link",
+   "label": "Hiring Contract",
+   "options": "Hiring Contract",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "hiring_contract.vendor_name",
+   "fieldname": "contract_vendor",
+   "fieldtype": "Data",
+   "label": "Vendor",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_contract",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "hiring_contract.contract_value",
+   "fieldname": "contract_value",
+   "fieldtype": "Currency",
+   "label": "Contract Value",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "hiring_contract.contract_start_date",
+   "fieldname": "contract_start_date",
+   "fieldtype": "Date",
+   "label": "Contract From Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "hiring_contract.contract_end_date",
+   "fieldname": "contract_end_date",
+   "fieldtype": "Date",
+   "label": "Contract To Date",
+   "read_only": 1
+  },
+  {
    "fieldname": "section_break_rejection",
    "fieldtype": "Section Break",
    "label": "Rejection"
@@ -161,44 +214,6 @@
    "role": "System Manager",
    "share": 1,
    "submit": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Employee",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Site Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Contract Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "cancel": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Transport Officer",
-   "share": 1,
    "write": 1
   }
  ],

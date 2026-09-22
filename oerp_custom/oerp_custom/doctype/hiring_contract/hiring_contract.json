@@ -30,7 +30,9 @@
   "section_break_attachments",
   "attachments",
   "section_break_rejection",
-  "rejection_remarks"
+  "rejection_remarks",
+  "section_break_cancellation",
+  "cancellation_reason"
  ],
  "fields": [
   {
@@ -172,6 +174,18 @@
    "fieldtype": "Small Text",
    "label": "Rejection Remarks",
    "mandatory_depends_on": "eval:doc.workflow_state=='Rejected'"
+  },
+  {
+   "fieldname": "section_break_cancellation",
+   "fieldtype": "Section Break",
+   "label": "Cancellation"
+  },
+  {
+   "allow_on_submit": 1,
+   "description": "Required to cancel this contract — fill this in (and save) before clicking Cancel, since a submitted document can't be edited from the Cancel confirmation itself.",
+   "fieldname": "cancellation_reason",
+   "fieldtype": "Small Text",
+   "label": "Cancellation Reason"
   }
  ],
  "grid_page_length": 50,
@@ -195,27 +209,6 @@
    "role": "System Manager",
    "share": 1,
    "submit": 1,
-   "write": 1
-  },
-  {
-   "cancel": 1,
-   "create": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Transport Officer",
-   "share": 1,
-   "submit": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Contract Manager",
-   "share": 1,
    "write": 1
   }
  ],

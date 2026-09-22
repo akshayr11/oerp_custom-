@@ -1,29 +1,28 @@
 # Copyright (c) 2026, akshay and contributors
 # For license information, please see license.txt
 
-"""Hiring Contract approval workflow — source of truth for its design.
+"""Contract Extension approval workflow — source of truth for its design.
 
-The Workflow this creates is exported as a fixture
-(oerp_custom/fixtures/workflow.json alongside the Fleet Hiring Request one),
-so a plain `bench migrate` already recreates it on any site — this script
-does not need to be run there. It exists so the workflow's shape can be
-rebuilt or changed in one place: edit STATES/TRANSITIONS below, rerun this,
-then `bench export-fixtures` to refresh the JSON.
+Exported as a fixture (oerp_custom/fixtures/workflow.json), so a plain
+`bench migrate` already recreates it on any site — this script does not
+need to be run there. Rerun after editing STATES/TRANSITIONS, then
+`bench export-fixtures`.
 
-    bench --site <site> execute oerp_custom.oerp_custom.doctype.hiring_contract.setup_workflow.run
+    bench --site <site> execute oerp_custom.oerp_custom.doctype.contract_extension.setup_workflow.run
 
 One approval level, reusing the Draft / Contract Manager Approval / Approved
-/ Rejected Workflow States already created for the Fleet Hiring Request
-workflow (state names only — not roles). Every transition's "allowed" and
-"allow_edit" is System Manager: no roles/permissions spec was given, so
-nothing is gated by an invented role. Restrict this to real roles once you
-have them. Only the final Approve submits the document (docstatus 0 -> 1);
-Rejected stays docstatus 0.
+/ Rejected Workflow States already created for the Fleet Hiring Request /
+Hiring Contract workflows (state names only — not roles). Every transition's
+"allowed" and "allow_edit" is System Manager: no roles/permissions spec was
+given, so nothing is gated by an invented role. Restrict this to real roles
+once you have them. Only the final Approve submits the document (docstatus
+0 -> 1), which triggers ContractExtension.on_submit to update the linked
+contract's expiry date.
 """
 
 import frappe
 
-DOCTYPE = "Hiring Contract"
+DOCTYPE = "Contract Extension"
 
 STATES = [
 	("Draft", "0"),
@@ -42,7 +41,7 @@ TRANSITIONS = [
 def run():
 	create_workflow()
 	frappe.db.commit()
-	print("Hiring Contract workflow ready.")
+	print("Contract Extension workflow ready.")
 
 
 def create_workflow():

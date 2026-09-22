@@ -1,30 +1,14 @@
 // Copyright (c) 2026, akshay and contributors
 // For license information, please see license.txt
 
+// No manual "Create Purchase Order" button — the Hiring Contract's own
+// on_submit hook (oerp_custom.oerp_custom.doctype.hiring_contract.hiring_contract)
+// creates and submits the PO automatically the moment the Approve
+// transition submits this document. Nothing to trigger from the form.
+
 frappe.ui.form.on("Hiring Contract", {
 	refresh(frm) {
 		update_contract_value(frm);
-
-		if (frm.doc.workflow_state === "Approved") {
-			frm.add_custom_button(__("Purchase Order"), () => {
-				frappe.confirm(
-					__("This will create and submit a Purchase Order directly. Continue?"),
-					() => {
-						frappe.call({
-							method: "oerp_custom.overrides.hiring_contract.create_purchase_order",
-							args: { source_name: frm.doc.name },
-							freeze: true,
-							freeze_message: __("Creating Purchase Order..."),
-							callback(r) {
-								if (r.message) {
-									frappe.set_route("Form", "Purchase Order", r.message);
-								}
-							},
-						});
-					}
-				);
-			}, __("Create"));
-		}
 	},
 });
 
