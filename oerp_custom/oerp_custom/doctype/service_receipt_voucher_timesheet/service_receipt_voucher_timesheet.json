@@ -1,0 +1,137 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "creation": "2026-09-24 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "timesheet",
+  "equipment",
+  "equipment_description",
+  "uom",
+  "billing_frequency",
+  "rate",
+  "service_from",
+  "service_to",
+  "days_worked",
+  "quantity",
+  "amount",
+  "vat_rate",
+  "vat_amount"
+ ],
+ "fields": [
+  {
+   "description": "Filtered to Approved timesheets against the parent's Contract and Service Month/Year.",
+   "fieldname": "timesheet",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Timesheet",
+   "options": "Equipment Timesheet",
+   "reqd": 1
+  },
+  {
+   "description": "The specific vehicle within that timesheet this line is for.",
+   "fieldname": "equipment",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Equipment",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "equipment_description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "description": "The contract's own UOM for this equipment — carried onto the Purchase Receipt as-is.",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "description": "The contract's billing frequency for this equipment — what Quantity is converted to (e.g. 31 worked days on a Monthly contract becomes 1). Not the same as UOM: this drives the day conversion, UOM is the Purchase Receipt's unit.",
+   "fieldname": "billing_frequency",
+   "fieldtype": "Select",
+   "label": "Billing Frequency",
+   "options": "Hourly\nDaily\nMonthly\nYearly",
+   "read_only": 1
+  },
+  {
+   "description": "The contract's own rate for this equipment.",
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "label": "Rate",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_from",
+   "fieldtype": "Date",
+   "label": "Service From",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_to",
+   "fieldtype": "Date",
+   "label": "Service To",
+   "read_only": 1
+  },
+  {
+   "description": "Number of days this equipment actually has hours logged, within the timesheet's own period.",
+   "fieldname": "days_worked",
+   "fieldtype": "Float",
+   "label": "Days Worked",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "description": "Days Worked converted to the contract's own UOM — e.g. 31 worked days on a Monthly contract becomes 1. This is what carries into the Purchase Receipt, not Days Worked.",
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Quantity",
+   "precision": "4",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vat_rate",
+   "fieldtype": "Float",
+   "label": "VAT %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vat_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "VAT Amount",
+   "options": "currency",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "module": "Oerp Custom",
+ "name": "Service Receipt Voucher Timesheet",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

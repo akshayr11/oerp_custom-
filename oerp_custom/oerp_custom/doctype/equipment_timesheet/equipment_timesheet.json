@@ -29,6 +29,8 @@
   "total_breakdown_hours",
   "column_break_5",
   "total_deduction",
+  "column_break_6",
+  "total_extra_charges",
   "section_break_rejection",
   "rejection_remarks"
  ],
@@ -159,6 +161,17 @@
    "fieldname": "total_deduction",
    "fieldtype": "Currency",
    "label": "Total Deduction",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_extra_charges",
+   "fieldtype": "Currency",
+   "label": "Total Extra Charges",
    "options": "currency",
    "read_only": 1
   },

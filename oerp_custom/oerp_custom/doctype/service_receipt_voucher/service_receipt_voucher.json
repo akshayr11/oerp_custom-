@@ -10,23 +10,32 @@
   "section_break_header",
   "naming_series",
   "amended_from",
-  "equipment_timesheet",
   "hiring_contract",
   "column_break_1",
-  "fleet_hiring_request",
-  "service_from_date",
+  "vendor_name",
+  "payment_term",
+  "section_break_contract_details",
+  "contract_start_date",
   "column_break_2",
-  "service_to_date",
-  "section_break_totals",
-  "total_normal_hours",
+  "contract_end_date",
   "column_break_3",
-  "total_overtime_hours",
+  "contract_value",
+  "section_break_period",
+  "service_month",
   "column_break_4",
-  "total_breakdown_hours",
+  "service_year",
+  "section_break_timesheets",
+  "timesheets",
+  "section_break_totals",
+  "total_amount",
   "column_break_5",
-  "total_deduction",
+  "total_vat_amount",
+  "column_break_6",
+  "grand_total",
   "section_break_remarks",
-  "remarks"
+  "remarks",
+  "section_break_rejection",
+  "rejection_remarks"
  ],
  "fields": [
   {
@@ -51,38 +60,41 @@
    "search_index": 1
   },
   {
-   "description": "Submitting this voucher is treated as \"approved\" for the purposes of the linked Equipment Timesheet's own cancellation rule.",
-   "fieldname": "equipment_timesheet",
-   "fieldtype": "Link",
-   "label": "Equipment Timesheet",
-   "options": "Equipment Timesheet",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "equipment_timesheet.hiring_contract",
    "fieldname": "hiring_contract",
    "fieldtype": "Link",
    "label": "Contract",
    "options": "Hiring Contract",
-   "read_only": 1
+   "reqd": 1
   },
   {
    "fieldname": "column_break_1",
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "equipment_timesheet.fleet_hiring_request",
-   "fieldname": "fleet_hiring_request",
-   "fieldtype": "Link",
-   "label": "Request",
-   "options": "Fleet Hiring Request",
+   "fetch_from": "hiring_contract.vendor_name",
+   "fieldname": "vendor_name",
+   "fieldtype": "Data",
+   "label": "Vendor",
    "read_only": 1
   },
   {
-   "fetch_from": "equipment_timesheet.service_from_date",
-   "fieldname": "service_from_date",
+   "fetch_from": "hiring_contract.payment_term",
+   "fieldname": "payment_term",
+   "fieldtype": "Link",
+   "label": "Payment Term",
+   "options": "Payment Term",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_contract_details",
+   "fieldtype": "Section Break",
+   "label": "Contract Details"
+  },
+  {
+   "fetch_from": "hiring_contract.contract_start_date",
+   "fieldname": "contract_start_date",
    "fieldtype": "Date",
-   "label": "Service From",
+   "label": "Contract From Date",
    "read_only": 1
   },
   {
@@ -90,23 +102,10 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "equipment_timesheet.service_to_date",
-   "fieldname": "service_to_date",
+   "fetch_from": "hiring_contract.contract_end_date",
+   "fieldname": "contract_end_date",
    "fieldtype": "Date",
-   "label": "Service To",
-   "read_only": 1
-  },
-  {
-   "fieldname": "section_break_totals",
-   "fieldtype": "Section Break",
-   "label": "Totals"
-  },
-  {
-   "fetch_from": "equipment_timesheet.total_normal_hours",
-   "fieldname": "total_normal_hours",
-   "fieldtype": "Float",
-   "label": "Total Normal Hrs",
-   "precision": "1",
+   "label": "Contract To Date",
    "read_only": 1
   },
   {
@@ -114,23 +113,57 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "equipment_timesheet.total_overtime_hours",
-   "fieldname": "total_overtime_hours",
-   "fieldtype": "Float",
-   "label": "Total OT Hrs",
-   "precision": "1",
+   "fetch_from": "hiring_contract.contract_value",
+   "fieldname": "contract_value",
+   "fieldtype": "Currency",
+   "label": "Contract Value",
+   "options": "currency",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_period",
+   "fieldtype": "Section Break",
+   "label": "Service Period"
+  },
+  {
+   "fieldname": "service_month",
+   "fieldtype": "Select",
+   "label": "Service Month",
+   "options": "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_4",
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "equipment_timesheet.total_breakdown_hours",
-   "fieldname": "total_breakdown_hours",
-   "fieldtype": "Float",
-   "label": "Total BD Hrs",
-   "precision": "1",
+   "fieldname": "service_year",
+   "fieldtype": "Int",
+   "label": "Service Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_timesheets",
+   "fieldtype": "Section Break",
+   "label": "Timesheets"
+  },
+  {
+   "description": "Only Approved timesheets against this Contract and Service Month/Year are offered.",
+   "fieldname": "timesheets",
+   "fieldtype": "Table",
+   "options": "Service Receipt Voucher Timesheet",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_totals",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -138,10 +171,20 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "equipment_timesheet.total_deduction",
-   "fieldname": "total_deduction",
+   "fieldname": "total_vat_amount",
    "fieldtype": "Currency",
-   "label": "Total Deduction",
+   "label": "Total VAT Amount",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total",
    "options": "currency",
    "read_only": 1
   },
@@ -153,6 +196,18 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_rejection",
+   "fieldtype": "Section Break",
+   "label": "Rejection"
+  },
+  {
+   "description": "Required when this voucher is rejected.",
+   "fieldname": "rejection_remarks",
+   "fieldtype": "Small Text",
+   "label": "Rejection Remarks",
+   "mandatory_depends_on": "eval:doc.workflow_state=='Rejected'"
   }
  ],
  "grid_page_length": 50,

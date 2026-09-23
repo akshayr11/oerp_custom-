@@ -51,7 +51,9 @@
   "column_break_totals_2",
   "breakdown_hours",
   "column_break_totals_3",
-  "deduction_amount"
+  "deduction_amount",
+  "extra_charges",
+  "net_rate"
  ],
  "fields": [
   {
@@ -333,8 +335,24 @@
    "fieldtype": "Currency",
    "label": "Deduction",
    "options": "currency",
-   "read_only": 1,
+   "in_list_view": 1,
+   "description": "Entered by the user for this equipment's breakdown period."
+  },
+  {
+   "fieldname": "extra_charges",
+   "fieldtype": "Currency",
+   "label": "Extra Charges",
+   "options": "currency",
    "in_list_view": 1
+  },
+  {
+   "fieldname": "net_rate",
+   "fieldtype": "Currency",
+   "label": "Net Rate",
+   "options": "currency",
+   "read_only": 1,
+   "in_list_view": 1,
+   "description": "Rate - Deduction + Extra Charges"
   }
  ],
  "grid_page_length": 50,

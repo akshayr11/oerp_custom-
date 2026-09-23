@@ -28,9 +28,12 @@ def create_hiring_contract(source_name, target_doc=None):
 			_("A Hiring Contract can only be created from an Approved Fleet Hiring Request.")
 		)
 
+	# Only a submitted (Approved) contract blocks a new one — a Rejected or
+	# still-in-progress one is docstatus 0 and was never live, so there's
+	# nothing to cancel; the user should just be able to try again.
 	existing = frappe.db.exists(
 		"Hiring Contract",
-		{"fleet_hiring_request": source_name, "docstatus": ["<", 2]},
+		{"fleet_hiring_request": source_name, "docstatus": 1},
 	)
 	if existing:
 		frappe.throw(
