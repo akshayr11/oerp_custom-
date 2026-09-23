@@ -105,7 +105,19 @@ fixtures = [
     },
     {
         "dt": "Workflow",
-        "filters": [["name", "in", ["Fleet Hiring Request", "Hiring Contract", "Contract Extension", "Equipment Timesheet"]]],
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Fleet Hiring Request",
+                    "Hiring Contract",
+                    "Contract Extension",
+                    "Equipment Timesheet",
+                    "Service Receipt Voucher",
+                ],
+            ]
+        ],
     },
 ]
 

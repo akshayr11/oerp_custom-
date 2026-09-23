@@ -29,6 +29,7 @@ applies it — this is what "if item has VAT the same must apply" runs through).
 import frappe
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils import getdate, today
 
 REFERENCE_FIELD = "custom_reference_hiring_request"
 
@@ -67,9 +68,13 @@ def create_purchase_order(source_name):
 
 	def update_item(source_row, target_row, source_parent):
 		target_row.stock_qty = target_row.qty
-		# reqd on Purchase Order Item; the contract's own start date is the
-		# closest thing to a schedule date available on this source chain.
-		target_row.schedule_date = source_parent.contract_start_date
+		# reqd on Purchase Order Item, and cannot be before the PO's own
+		# transaction_date (defaults to today, since we never set it
+		# explicitly). The contract's start date is often in the past by
+		# the time the contract is actually approved — a hire contract
+		# commonly gets approved after its period has already begun — so
+		# fall back to today whenever that would violate that rule.
+		target_row.schedule_date = max(getdate(source_parent.contract_start_date), getdate(today()))
 
 	po = get_mapped_doc(
 		"Hiring Contract",

@@ -40,6 +40,15 @@ frappe.ui.form.on("Equipment Timesheet Detail", {
 	status(frm, cdt, cdn) {
 		recalculate_row(frm, cdt, cdn);
 	},
+	rate(frm, cdt, cdn) {
+		update_net_rate(frm, cdt, cdn);
+	},
+	deduction_amount(frm, cdt, cdn) {
+		update_net_rate(frm, cdt, cdn);
+	},
+	extra_charges(frm, cdt, cdn) {
+		update_net_rate(frm, cdt, cdn);
+	},
 });
 
 // One handler shared by all 31 day fields, wired below.
@@ -144,7 +153,9 @@ function recalculate_row(frm, cdt, cdn) {
 			row.breakdown_hours = 0;
 		}
 
-		row.deduction_amount = flt(row.breakdown_hours) * flt(row.rate);
+		// Deduction Amount and Extra Charges are the user's own entries, not
+		// derived from Breakdown Hours — only Net Rate is computed from them.
+		row.net_rate = flt(row.rate) - flt(row.deduction_amount) + flt(row.extra_charges);
 
 		frm.refresh_field("details");
 		update_totals(frm);
@@ -161,6 +172,13 @@ function recalculate_row(frm, cdt, cdn) {
 	});
 }
 
+function update_net_rate(frm, cdt, cdn) {
+	const row = locals[cdt][cdn];
+	row.net_rate = flt(row.rate) - flt(row.deduction_amount) + flt(row.extra_charges);
+	frm.refresh_field("details");
+	update_totals(frm);
+}
+
 function update_totals(frm) {
 	const totals = (frm.doc.details || []).reduce(
 		(acc, row) => {
@@ -168,13 +186,15 @@ function update_totals(frm) {
 			acc.ot += flt(row.overtime_hours);
 			acc.bd += flt(row.breakdown_hours);
 			acc.deduction += flt(row.deduction_amount);
+			acc.extra += flt(row.extra_charges);
 			return acc;
 		},
-		{ normal: 0, ot: 0, bd: 0, deduction: 0 }
+		{ normal: 0, ot: 0, bd: 0, deduction: 0, extra: 0 }
 	);
 
 	frm.set_value("total_normal_hours", totals.normal);
 	frm.set_value("total_overtime_hours", totals.ot);
 	frm.set_value("total_breakdown_hours", totals.bd);
 	frm.set_value("total_deduction", totals.deduction);
+	frm.set_value("total_extra_charges", totals.extra);
 }
