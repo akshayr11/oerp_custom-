@@ -31,6 +31,8 @@
   "total_deduction",
   "column_break_6",
   "total_extra_charges",
+  "column_break_7",
+  "total_ot_amount",
   "section_break_rejection",
   "rejection_remarks"
  ],
@@ -172,6 +174,17 @@
    "fieldname": "total_extra_charges",
    "fieldtype": "Currency",
    "label": "Total Extra Charges",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_ot_amount",
+   "fieldtype": "Currency",
+   "label": "Total OT Amount",
    "options": "currency",
    "read_only": 1
   },

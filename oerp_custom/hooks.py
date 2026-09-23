@@ -114,7 +114,7 @@ fixtures = [
                     "Hiring Contract",
                     "Contract Extension",
                     "Equipment Timesheet",
-                    "Service Receipt Voucher",
+                    "Hiring Receipt",
                 ],
             ]
         ],

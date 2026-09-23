@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class ServiceReceiptVoucherTimesheet(Document):
+class HiringReceiptTimesheet(Document):
 	pass

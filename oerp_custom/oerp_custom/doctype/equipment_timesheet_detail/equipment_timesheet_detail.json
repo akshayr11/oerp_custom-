@@ -53,6 +53,7 @@
   "column_break_totals_3",
   "deduction_amount",
   "extra_charges",
+  "ot_amount",
   "net_rate"
  ],
  "fields": [
@@ -95,7 +96,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Working\nBreakdown",
+   "options": "Working\nBreakdown\nIdle\nOvertime\nOff\nDe-hired",
    "default": "Working",
    "in_list_view": 1,
    "reqd": 1
@@ -344,6 +345,13 @@
    "label": "Extra Charges",
    "options": "currency",
    "in_list_view": 1
+  },
+  {
+   "fieldname": "ot_amount",
+   "fieldtype": "Currency",
+   "label": "OT Amount",
+   "options": "currency",
+   "description": "Entered by the user — not derived from OT Hours yet."
   },
   {
    "fieldname": "net_rate",

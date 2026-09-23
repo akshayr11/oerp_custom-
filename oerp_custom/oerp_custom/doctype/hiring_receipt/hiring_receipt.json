@@ -3,7 +3,7 @@
  "allow_bulk_edit": 1,
  "allow_rename": 1,
  "autoname": "naming_series:",
- "creation": "2026-09-22 00:00:00.000000",
+ "creation": "2026-09-22 00:00:00",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -29,8 +29,14 @@
   "section_break_totals",
   "total_amount",
   "column_break_5",
-  "total_vat_amount",
+  "total_ot_amount",
   "column_break_6",
+  "total_deduction_amount",
+  "column_break_totals_1",
+  "net_amount",
+  "column_break_totals_2",
+  "total_vat_amount",
+  "column_break_totals_3",
   "grand_total",
   "section_break_remarks",
   "remarks",
@@ -47,14 +53,14 @@
    "fieldtype": "Select",
    "hidden": 1,
    "label": "Naming Series",
-   "options": "ALG/T-L/SRV/.YY./.#####"
+   "options": "ALG/T-L/HREC/.YY./.#####"
   },
   {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Service Receipt Voucher",
+   "options": "Hiring Receipt",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
@@ -62,6 +68,7 @@
   {
    "fieldname": "hiring_contract",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Contract",
    "options": "Hiring Contract",
    "reqd": 1
@@ -128,6 +135,7 @@
   {
    "fieldname": "service_month",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Service Month",
    "options": "January\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
    "reqd": 1
@@ -139,6 +147,7 @@
   {
    "fieldname": "service_year",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Service Year",
    "reqd": 1
   },
@@ -151,7 +160,7 @@
    "description": "Only Approved timesheets against this Contract and Service Month/Year are offered.",
    "fieldname": "timesheets",
    "fieldtype": "Table",
-   "options": "Service Receipt Voucher Timesheet",
+   "options": "Hiring Receipt Timesheet",
    "reqd": 1
   },
   {
@@ -160,6 +169,7 @@
    "label": "Totals"
   },
   {
+   "description": "Sum of each row's Amount (Normal Hours × Rate for Monthly billing, Quantity × Rate otherwise) — before OT Amount/Deduction.",
    "fieldname": "total_amount",
    "fieldtype": "Currency",
    "label": "Total Amount",
@@ -171,9 +181,9 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "total_vat_amount",
+   "fieldname": "total_ot_amount",
    "fieldtype": "Currency",
-   "label": "Total VAT Amount",
+   "label": "Total OT Amount",
    "options": "currency",
    "read_only": 1
   },
@@ -182,6 +192,41 @@
    "fieldtype": "Column Break"
   },
   {
+   "fieldname": "total_deduction_amount",
+   "fieldtype": "Currency",
+   "label": "Total Deduction",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_totals_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Total Amount + Total OT Amount - Total Deduction. Fetched onto the Purchase Receipt this voucher creates.",
+   "fieldname": "net_amount",
+   "fieldtype": "Currency",
+   "label": "Net Amount",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_totals_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_vat_amount",
+   "fieldtype": "Currency",
+   "label": "Total VAT Amount",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_totals_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Net Amount + Total VAT Amount.",
    "fieldname": "grand_total",
    "fieldtype": "Currency",
    "label": "Grand Total",
@@ -214,8 +259,10 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
+ "modified": "2026-09-23 16:27:43.637244",
+ "modified_by": "Administrator",
  "module": "Oerp Custom",
- "name": "Service Receipt Voucher",
+ "name": "Hiring Receipt",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [

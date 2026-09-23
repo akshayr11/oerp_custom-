@@ -1,14 +1,14 @@
 # Copyright (c) 2026, akshay and contributors
 # For license information, please see license.txt
 
-"""Service Receipt Voucher approval workflow — source of truth for its design.
+"""Hiring Receipt approval workflow — source of truth for its design.
 
 Exported as a fixture (oerp_custom/fixtures/workflow.json), so a plain
 `bench migrate` already recreates it on any site — this script does not
 need to be run there. Rerun after editing STATES/TRANSITIONS, then
 `bench export-fixtures`.
 
-    bench --site <site> execute oerp_custom.oerp_custom.doctype.service_receipt_voucher.setup_workflow.run
+    bench --site <site> execute oerp_custom.oerp_custom.doctype.hiring_receipt.setup_workflow.run
 
 One approval level, reusing the "Transport Officer Final Approval" Workflow
 State already created for the Fleet Hiring Request workflow (state name
@@ -21,7 +21,7 @@ which triggers Purchase Receipt creation via on_submit.
 
 import frappe
 
-DOCTYPE = "Service Receipt Voucher"
+DOCTYPE = "Hiring Receipt"
 
 STATES = [
 	("Draft", "0"),
@@ -40,7 +40,7 @@ TRANSITIONS = [
 def run():
 	create_workflow()
 	frappe.db.commit()
-	print("Service Receipt Voucher workflow ready.")
+	print("Hiring Receipt workflow ready.")
 
 
 def create_workflow():

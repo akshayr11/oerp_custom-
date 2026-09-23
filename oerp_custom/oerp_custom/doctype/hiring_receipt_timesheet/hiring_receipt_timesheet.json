@@ -1,0 +1,201 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "creation": "2026-09-24 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "timesheet",
+  "equipment",
+  "equipment_description",
+  "uom",
+  "billing_frequency",
+  "rate",
+  "service_from",
+  "service_to",
+  "normal_hours",
+  "overtime_hours",
+  "breakdown_hours",
+  "days_worked",
+  "quantity",
+  "amount",
+  "ot_rate",
+  "ot_amount",
+  "deduction_amount",
+  "net_amount",
+  "vat_rate",
+  "vat_amount"
+ ],
+ "fields": [
+  {
+   "description": "Filtered to Approved timesheets against the parent's Contract and Service Month/Year.",
+   "fieldname": "timesheet",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Timesheet",
+   "options": "Equipment Timesheet",
+   "reqd": 1
+  },
+  {
+   "description": "The specific vehicle within that timesheet this line is for.",
+   "fieldname": "equipment",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Equipment",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "equipment_description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "read_only": 1
+  },
+  {
+   "description": "For Daily/Yearly/Hourly billing: the contract's own UOM, carried onto the Purchase Receipt as-is. For Monthly billing: always Hour (Quantity is hours worked) \u2014 the Purchase Receipt instead uses a Month-based UOM and quantity, not this row's own.",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "read_only": 1
+  },
+  {
+   "description": "The contract's billing frequency for this equipment \u2014 what Quantity is converted to (e.g. 31 worked days on a Monthly contract becomes 1). Not the same as UOM: this drives the day conversion, UOM is the Purchase Receipt's unit.",
+   "fieldname": "billing_frequency",
+   "fieldtype": "Select",
+   "label": "Billing Frequency",
+   "options": "Hourly\nDaily\nMonthly\nYearly",
+   "read_only": 1
+  },
+  {
+   "description": "The contract's own rate for this equipment.",
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "label": "Rate",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_from",
+   "fieldtype": "Date",
+   "label": "Service From",
+   "read_only": 1
+  },
+  {
+   "fieldname": "service_to",
+   "fieldtype": "Date",
+   "label": "Service To",
+   "read_only": 1
+  },
+  {
+   "description": "From the timesheet row \u2014 this equipment's Normal Hours for the period.",
+   "fieldname": "normal_hours",
+   "fieldtype": "Float",
+   "label": "Normal Hrs",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "description": "From the timesheet row \u2014 this equipment's Overtime Hours for the period.",
+   "fieldname": "overtime_hours",
+   "fieldtype": "Float",
+   "label": "OT Hrs",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "description": "From the timesheet row \u2014 this equipment's Breakdown Hours for the period.",
+   "fieldname": "breakdown_hours",
+   "fieldtype": "Float",
+   "label": "BD Hrs",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "description": "Number of days this equipment actually has hours logged, within the timesheet's own period.",
+   "fieldname": "days_worked",
+   "fieldtype": "Float",
+   "label": "Days Worked",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "description": "For Daily/Yearly/Hourly billing: Days Worked converted to the contract's own UOM (e.g. 31 worked days on a Yearly contract becomes a fraction of a year). For Monthly billing: this equipment's total working hours (Normal + OT) instead \u2014 the Purchase Receipt is what converts that into a month fraction, using the contract's daily hour threshold.",
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Quantity",
+   "precision": "4",
+   "read_only": 1
+  },
+  {
+   "description": "For Monthly billing: Normal Hours \u00d7 Rate (Overtime is billed separately below, at its own rate). For Daily/Yearly/Hourly billing: Quantity \u00d7 Rate.",
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "description": "Entered by the user \u2014 there's no OT rate on the contract to fetch, since normal running is billed monthly but overtime is paid separately.",
+   "fieldname": "ot_rate",
+   "fieldtype": "Currency",
+   "label": "OT Rate",
+   "options": "currency"
+  },
+  {
+   "description": "OT Hrs \u00d7 OT Rate.",
+   "fieldname": "ot_amount",
+   "fieldtype": "Currency",
+   "label": "OT Amount",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "description": "Fetched from the timesheet's own Deduction Amount for this equipment.",
+   "fieldname": "deduction_amount",
+   "fieldtype": "Currency",
+   "label": "Deduction",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "description": "Amount + OT Amount - Deduction. This is what VAT is based on, not Amount alone. Rolled up onto the header's own Net Amount, which the Purchase Receipt fetches as a header-level figure (custom_net_amount) — the Purchase Receipt's own line item is Amount x Quantity only, not this.",
+   "fieldname": "net_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Net Amount",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vat_rate",
+   "fieldtype": "Float",
+   "label": "VAT %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vat_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "VAT Amount",
+   "options": "currency",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "module": "Oerp Custom",
+ "name": "Hiring Receipt Timesheet",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
