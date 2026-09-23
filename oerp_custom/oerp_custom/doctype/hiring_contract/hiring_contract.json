@@ -3,7 +3,7 @@
  "allow_bulk_edit": 1,
  "allow_rename": 1,
  "autoname": "naming_series:",
- "creation": "2026-09-21 00:00:00.000000",
+ "creation": "2026-09-21 00:00:00",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -11,7 +11,6 @@
   "naming_series",
   "amended_from",
   "fleet_hiring_request",
-  "column_break_1",
   "vendor",
   "vendor_name",
   "payment_term",
@@ -75,12 +74,9 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_1",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "vendor",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Vendor",
    "options": "Supplier",
    "reqd": 1
@@ -166,6 +162,7 @@
   {
    "fieldname": "contract_start_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Contract From Date",
    "reqd": 1
   },
@@ -177,6 +174,7 @@
    "description": "Contract expiry date.",
    "fieldname": "contract_end_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Contract To Date",
    "reqd": 1
   },
@@ -263,6 +261,8 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
+ "modified": "2026-09-21 14:50:06.900610",
+ "modified_by": "Administrator",
  "module": "Oerp Custom",
  "name": "Hiring Contract",
  "naming_rule": "By \"Naming Series\" field",
