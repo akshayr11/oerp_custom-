@@ -31,6 +31,7 @@ class HiringReceipt(Document):
 			row.ot_amount = flt(row.overtime_hours) * flt(row.ot_rate)
 			row.net_amount = flt(row.amount) + flt(row.ot_amount) - flt(row.deduction_amount)
 			row.vat_amount = flt(row.net_amount) * flt(row.vat_rate) / 100 if row.vat_rate else 0
+			row.net_amount_incl_vat = flt(row.net_amount) + flt(row.vat_amount)
 
 	def calculate_totals(self):
 		total_amount = total_ot = total_deduction = total_vat = 0

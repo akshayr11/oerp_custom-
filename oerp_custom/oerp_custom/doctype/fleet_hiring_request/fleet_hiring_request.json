@@ -138,7 +138,6 @@
    "label": "Hiring Contract"
   },
   {
-   "description": "Set automatically once a Hiring Contract is created from this request.",
    "fieldname": "hiring_contract",
    "fieldtype": "Link",
    "label": "Hiring Contract",
@@ -184,7 +183,6 @@
    "label": "Rejection"
   },
   {
-   "description": "Required whenever this request is rejected at any approval stage.",
    "fieldname": "rejection_remarks",
    "fieldtype": "Small Text",
    "label": "Rejection Remarks",

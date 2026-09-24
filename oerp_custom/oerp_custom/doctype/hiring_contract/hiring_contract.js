@@ -9,6 +9,15 @@
 frappe.ui.form.on("Hiring Contract", {
 	refresh(frm) {
 		update_contract_value(frm);
+
+		if (frm.doc.workflow_state === "Approved") {
+			frm.add_custom_button(__("Equipment Timesheet"), () => {
+				frappe.new_doc("Equipment Timesheet", {
+					hiring_contract: frm.doc.name,
+					fleet_hiring_request: frm.doc.fleet_hiring_request,
+				});
+			}, __("Create"));
+		}
 	},
 });
 

@@ -36,7 +36,23 @@ frappe.ui.form.on("Equipment Timesheet", {
 		frm._monthly_equipment_set = undefined;
 		frm.refresh();
 	},
+
+	// The Normal/OT/BD split depends on the period's own length (day_31 on
+	// a 30-day period must not count as a real day — see
+	// get_active_day_fields) — without these, changing the dates after
+	// hours are already entered leaves every row's live preview stale
+	// until something else happens to touch it.
+	service_from_date(frm) {
+		recalculate_all_rows(frm);
+	},
+	service_to_date(frm) {
+		recalculate_all_rows(frm);
+	},
 });
+
+function recalculate_all_rows(frm) {
+	(frm.doc.details || []).forEach((row) => recalculate_row(frm, row.doctype, row.name));
+}
 
 const NOT_BILLABLE_STATUSES = new Set(["Idle", "Overtime", "Off", "De-hired"]);
 
@@ -46,18 +62,6 @@ frappe.ui.form.on("Equipment Timesheet Detail", {
 	},
 	status(frm, cdt, cdn) {
 		recalculate_row(frm, cdt, cdn);
-	},
-	rate(frm, cdt, cdn) {
-		update_net_rate(frm, cdt, cdn);
-	},
-	deduction_amount(frm, cdt, cdn) {
-		update_net_rate(frm, cdt, cdn);
-	},
-	extra_charges(frm, cdt, cdn) {
-		update_net_rate(frm, cdt, cdn);
-	},
-	ot_amount(frm) {
-		update_totals(frm);
 	},
 });
 
@@ -175,11 +179,6 @@ function recalculate_row(frm, cdt, cdn) {
 			row.breakdown_hours = 0;
 		}
 
-		// Deduction Amount, Extra Charges and OT Amount are the user's own
-		// entries, not derived from hours — only Net Rate is computed from
-		// them.
-		row.net_rate = flt(row.rate) - flt(row.deduction_amount) + flt(row.extra_charges);
-
 		frm.refresh_field("details");
 		update_totals(frm);
 	};
@@ -239,31 +238,18 @@ function get_monthly_equipment_set(frm) {
 		});
 }
 
-function update_net_rate(frm, cdt, cdn) {
-	const row = locals[cdt][cdn];
-	row.net_rate = flt(row.rate) - flt(row.deduction_amount) + flt(row.extra_charges);
-	frm.refresh_field("details");
-	update_totals(frm);
-}
-
 function update_totals(frm) {
 	const totals = (frm.doc.details || []).reduce(
 		(acc, row) => {
 			acc.normal += flt(row.normal_hours);
 			acc.ot += flt(row.overtime_hours);
 			acc.bd += flt(row.breakdown_hours);
-			acc.deduction += flt(row.deduction_amount);
-			acc.extra += flt(row.extra_charges);
-			acc.ot_amount += flt(row.ot_amount);
 			return acc;
 		},
-		{ normal: 0, ot: 0, bd: 0, deduction: 0, extra: 0, ot_amount: 0 }
+		{ normal: 0, ot: 0, bd: 0 }
 	);
 
 	frm.set_value("total_normal_hours", totals.normal);
 	frm.set_value("total_overtime_hours", totals.ot);
 	frm.set_value("total_breakdown_hours", totals.bd);
-	frm.set_value("total_deduction", totals.deduction);
-	frm.set_value("total_extra_charges", totals.extra);
-	frm.set_value("total_ot_amount", totals.ot_amount);
 }

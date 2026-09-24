@@ -23,10 +23,13 @@ on each Equipment Timesheet Detail row. Per row, keyed off Status:
       in the day fields, since none of these represents ordinary billable
       running time.
 
-    * Deduction Amount, Extra Charges and OT Amount are entered by the user
-      directly — not derived from hours or anything else, so someone can
-      apply a negotiated/adjusted figure rather than a strict formula.
-    * Net Rate = Rate - Deduction Amount + Extra Charges. Computed here.
+Purely an hours record — no rates, deductions or amounts live here at all;
+that's all on the Hiring Receipt this timesheet later feeds into (see
+oerp_custom.overrides.hiring_receipt).
+
+An equipment can't appear on two timesheets against the same contract
+whose periods overlap — validate_no_duplicate_period() blocks that, so the
+same days can't get billed twice.
 
 This is deliberately not the standard Frappe/ERPNext Timesheet doctype —
 that's built around employee time logs against projects/tasks, not daily
@@ -45,7 +48,8 @@ NOT_BILLABLE_STATUSES = {"Idle", "Overtime", "Off", "De-hired"}
 class EquipmentTimesheet(Document):
 	def validate(self):
 		self.set_month_label()
-		self.calculate_hours_and_deduction()
+		self.calculate_hours()
+		self.validate_no_duplicate_period()
 		self.validate_rejection_remarks()
 
 	def set_month_label(self):
@@ -64,7 +68,7 @@ class EquipmentTimesheet(Document):
 		period_days = max(1, min(31, period_days))
 		return DAY_FIELDS[:period_days]
 
-	def calculate_hours_and_deduction(self):
+	def calculate_hours(self):
 		threshold = flt(frappe.db.get_value("Hiring Contract", self.hiring_contract, "total_operational_hours"))
 		active_day_fields = self.get_active_day_fields()
 		monthly_equipment = set(
@@ -79,7 +83,7 @@ class EquipmentTimesheet(Document):
 			)
 		)
 
-		total_normal = total_ot = total_bd = total_deduction = total_extra = total_ot_amount = 0
+		total_normal = total_ot = total_bd = 0
 
 		for row in self.get("details") or []:
 			day_total = sum(flt(row.get(f)) for f in active_day_fields)
@@ -110,24 +114,57 @@ class EquipmentTimesheet(Document):
 					row.overtime_hours = 0
 					row.breakdown_hours = 0
 
-			# Deduction Amount, Extra Charges and OT Amount are the user's
-			# own entries — not derived here. Net Rate is the only thing
-			# computed from them.
-			row.net_rate = flt(row.rate) - flt(row.deduction_amount) + flt(row.extra_charges)
-
 			total_normal += row.normal_hours
 			total_ot += row.overtime_hours
 			total_bd += row.breakdown_hours
-			total_deduction += flt(row.deduction_amount)
-			total_extra += flt(row.extra_charges)
-			total_ot_amount += flt(row.ot_amount)
 
 		self.total_normal_hours = total_normal
 		self.total_overtime_hours = total_ot
 		self.total_breakdown_hours = total_bd
-		self.total_deduction = total_deduction
-		self.total_extra_charges = total_extra
-		self.total_ot_amount = total_ot_amount
+
+	def validate_no_duplicate_period(self):
+		"""An equipment already billed for a period shouldn't be timesheeted
+		again for a period that overlaps it, against the same contract —
+		that would double-count (and potentially double-bill, once it goes
+		through a Hiring Receipt) the same days.
+		"""
+		if not (self.hiring_contract and self.service_from_date and self.service_to_date):
+			return
+
+		equipment_codes = [row.equipment for row in self.get("details") or [] if row.equipment]
+		if not equipment_codes:
+			return
+
+		conflict = frappe.db.sql(
+			"""
+			select et.name, etd.equipment
+			from `tabEquipment Timesheet` et
+			inner join `tabEquipment Timesheet Detail` etd
+				on etd.parent = et.name and etd.parenttype = 'Equipment Timesheet'
+			where et.hiring_contract = %(hiring_contract)s
+			  and et.name != %(name)s
+			  and et.docstatus < 2
+			  and etd.equipment in %(equipment_codes)s
+			  and et.service_from_date <= %(service_to_date)s
+			  and et.service_to_date >= %(service_from_date)s
+			limit 1
+			""",
+			{
+				"hiring_contract": self.hiring_contract,
+				"name": self.name or "",
+				"equipment_codes": equipment_codes,
+				"service_to_date": self.service_to_date,
+				"service_from_date": self.service_from_date,
+			},
+			as_dict=True,
+		)
+		if conflict:
+			frappe.throw(
+				_(
+					"{0} already has a timesheet ({1}) covering an overlapping period against this "
+					"contract — adjust the period or remove this equipment."
+				).format(frappe.bold(conflict[0].equipment), frappe.bold(conflict[0].name))
+			)
 
 	def validate_rejection_remarks(self):
 		"""mandatory_depends_on on the field only enforces this in the

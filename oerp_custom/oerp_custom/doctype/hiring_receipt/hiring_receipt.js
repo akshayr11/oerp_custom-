@@ -70,6 +70,10 @@ frappe.ui.form.on("Hiring Receipt Timesheet", {
 	ot_rate(frm, cdt, cdn) {
 		recalculate_row_amount(frm, cdt, cdn);
 	},
+
+	deduction_amount(frm, cdt, cdn) {
+		recalculate_row_amount(frm, cdt, cdn);
+	},
 });
 
 // Mirrors the server's HiringReceipt.calculate_row_amounts() — a live
@@ -79,6 +83,7 @@ function recalculate_row_amount(frm, cdt, cdn) {
 	row.ot_amount = flt(row.overtime_hours) * flt(row.ot_rate);
 	row.net_amount = flt(row.amount) + flt(row.ot_amount) - flt(row.deduction_amount);
 	row.vat_amount = row.vat_rate ? (flt(row.net_amount) * flt(row.vat_rate)) / 100 : 0;
+	row.net_amount_incl_vat = flt(row.net_amount) + flt(row.vat_amount);
 	frm.refresh_field("timesheets");
 	update_totals(frm);
 }

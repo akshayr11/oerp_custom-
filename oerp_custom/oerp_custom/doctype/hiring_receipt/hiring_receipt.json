@@ -157,7 +157,6 @@
    "label": "Timesheets"
   },
   {
-   "description": "Only Approved timesheets against this Contract and Service Month/Year are offered.",
    "fieldname": "timesheets",
    "fieldtype": "Table",
    "options": "Hiring Receipt Timesheet",
@@ -169,7 +168,6 @@
    "label": "Totals"
   },
   {
-   "description": "Sum of each row's Amount (Normal Hours × Rate for Monthly billing, Quantity × Rate otherwise) — before OT Amount/Deduction.",
    "fieldname": "total_amount",
    "fieldtype": "Currency",
    "label": "Total Amount",
@@ -203,7 +201,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "Total Amount + Total OT Amount - Total Deduction. Fetched onto the Purchase Receipt this voucher creates.",
    "fieldname": "net_amount",
    "fieldtype": "Currency",
    "label": "Net Amount",
@@ -226,7 +223,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "Net Amount + Total VAT Amount.",
    "fieldname": "grand_total",
    "fieldtype": "Currency",
    "label": "Grand Total",
@@ -248,7 +244,6 @@
    "label": "Rejection"
   },
   {
-   "description": "Required when this voucher is rejected.",
    "fieldname": "rejection_remarks",
    "fieldtype": "Small Text",
    "label": "Rejection Remarks",

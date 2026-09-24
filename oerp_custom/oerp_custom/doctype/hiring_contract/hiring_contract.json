@@ -31,6 +31,7 @@
   "column_break_3",
   "total_operational_hours",
   "contract_value",
+  "purchase_order",
   "section_break_items",
   "items",
   "section_break_clauses",
@@ -66,7 +67,6 @@
    "search_index": 1
   },
   {
-   "description": "Set when this contract was created from an approved Fleet Hiring Request.",
    "fieldname": "fleet_hiring_request",
    "fieldtype": "Link",
    "label": "Fleet Hiring Request",
@@ -171,7 +171,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "Contract expiry date.",
    "fieldname": "contract_end_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -195,6 +194,13 @@
    "read_only": 1
   },
   {
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "label": "Purchase Order",
+   "options": "Purchase Order",
+   "read_only": 1
+  },
+  {
    "fieldname": "section_break_items",
    "fieldtype": "Section Break",
    "label": "Equipment"
@@ -210,14 +216,12 @@
    "label": "Clauses"
   },
   {
-   "description": "Referenced from the Contract Clause master.",
    "fieldname": "clauses",
    "fieldtype": "Table MultiSelect",
    "label": "Clauses",
    "options": "Hiring Contract Clause"
   },
   {
-   "description": "Clauses specific to this contract only, not in the master list.",
    "fieldname": "additional_clauses",
    "fieldtype": "Small Text",
    "label": "Additional Clauses"
@@ -238,7 +242,6 @@
    "label": "Rejection"
   },
   {
-   "description": "Required when this contract is rejected.",
    "fieldname": "rejection_remarks",
    "fieldtype": "Small Text",
    "label": "Rejection Remarks",
@@ -251,7 +254,6 @@
   },
   {
    "allow_on_submit": 1,
-   "description": "Required to cancel this contract — fill this in (and save) before clicking Cancel, since a submitted document can't be edited from the Cancel confirmation itself.",
    "fieldname": "cancellation_reason",
    "fieldtype": "Small Text",
    "label": "Cancellation Reason"

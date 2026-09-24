@@ -103,6 +103,11 @@ def create_purchase_order(source_name):
 	po.insert(ignore_permissions=True)
 	po.submit()
 
+	# Explicit frappe.db.set_value, not self.xxx = — this runs from
+	# on_submit, after the contract's own submit-save already wrote its
+	# row; setting a plain attribute here wouldn't get persisted.
+	frappe.db.set_value("Hiring Contract", source_name, "purchase_order", po.name)
+
 	return po.name
 
 

@@ -13,7 +13,6 @@
   "hiring_contract",
   "fleet_hiring_request",
   "column_break_1",
-  "location",
   "month",
   "section_break_period",
   "service_from_date",
@@ -27,12 +26,6 @@
   "total_overtime_hours",
   "column_break_4",
   "total_breakdown_hours",
-  "column_break_5",
-  "total_deduction",
-  "column_break_6",
-  "total_extra_charges",
-  "column_break_7",
-  "total_ot_amount",
   "section_break_rejection",
   "rejection_remarks"
  ],
@@ -66,7 +59,6 @@
    "reqd": 1
   },
   {
-   "description": "The Fleet Hiring Request this contract came from.",
    "fetch_from": "hiring_contract.fleet_hiring_request",
    "fieldname": "fleet_hiring_request",
    "fieldtype": "Link",
@@ -77,11 +69,6 @@
   {
    "fieldname": "column_break_1",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "location",
-   "fieldtype": "Data",
-   "label": "Location"
   },
   {
    "fieldname": "month",
@@ -156,45 +143,11 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_5",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "total_deduction",
-   "fieldtype": "Currency",
-   "label": "Total Deduction",
-   "options": "currency",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_6",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "total_extra_charges",
-   "fieldtype": "Currency",
-   "label": "Total Extra Charges",
-   "options": "currency",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_7",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "total_ot_amount",
-   "fieldtype": "Currency",
-   "label": "Total OT Amount",
-   "options": "currency",
-   "read_only": 1
-  },
-  {
    "fieldname": "section_break_rejection",
    "fieldtype": "Section Break",
    "label": "Rejection"
   },
   {
-   "description": "Required when this timesheet is rejected.",
    "fieldname": "rejection_remarks",
    "fieldtype": "Small Text",
    "label": "Rejection Remarks",

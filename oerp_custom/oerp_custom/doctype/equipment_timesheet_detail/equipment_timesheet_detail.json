@@ -49,12 +49,7 @@
   "column_break_totals_1",
   "overtime_hours",
   "column_break_totals_2",
-  "breakdown_hours",
-  "column_break_totals_3",
-  "deduction_amount",
-  "extra_charges",
-  "ot_amount",
-  "net_rate"
+  "breakdown_hours"
  ],
  "fields": [
   {
@@ -89,8 +84,7 @@
    "fieldname": "rate",
    "fieldtype": "Currency",
    "label": "Rate",
-   "options": "currency",
-   "description": "This equipment's contracted rate, matched from the Hiring Contract's own item rows \u2014 used to compute the breakdown deduction."
+   "options": "currency"
   },
   {
    "fieldname": "status",
@@ -326,41 +320,6 @@
    "read_only": 1,
    "in_list_view": 1,
    "precision": "1"
-  },
-  {
-   "fieldname": "column_break_totals_3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "deduction_amount",
-   "fieldtype": "Currency",
-   "label": "Deduction",
-   "options": "currency",
-   "in_list_view": 1,
-   "description": "Entered by the user for this equipment's breakdown period."
-  },
-  {
-   "fieldname": "extra_charges",
-   "fieldtype": "Currency",
-   "label": "Extra Charges",
-   "options": "currency",
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "ot_amount",
-   "fieldtype": "Currency",
-   "label": "OT Amount",
-   "options": "currency",
-   "description": "Entered by the user — not derived from OT Hours yet."
-  },
-  {
-   "fieldname": "net_rate",
-   "fieldtype": "Currency",
-   "label": "Net Rate",
-   "options": "currency",
-   "read_only": 1,
-   "in_list_view": 1,
-   "description": "Rate - Deduction + Extra Charges"
   }
  ],
  "grid_page_length": 50,

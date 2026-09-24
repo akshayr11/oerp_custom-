@@ -86,6 +86,13 @@ class HiringContract(Document):
 				po.cancel()
 
 	def get_linked_purchase_order(self):
+		"""Prefers the stored `purchase_order` field (set once, right after
+		creation, in oerp_custom.overrides.hiring_contract.create_purchase_order)
+		— falls back to the old lookup-by-reference for any contract
+		approved before that field existed.
+		"""
+		if self.purchase_order:
+			return self.purchase_order
 		if not self.fleet_hiring_request:
 			return None
 		return frappe.db.get_value(
