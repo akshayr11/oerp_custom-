@@ -43,6 +43,12 @@ def create_hiring_contract(source_name, target_doc=None):
 		)
 
 	def set_missing_values(source, target):
+		# get_mapped_doc copies over any field the source and target share
+		# by name — Fleet Hiring Request and Hiring Contract both have
+		# their own separate workflow_state, so without this a new
+		# contract would start pre-set to "Approved" (the request's own
+		# final state) instead of its own workflow's actual starting state.
+		target.workflow_state = None
 		target.naming_series = CONTRACT_NAMING_SERIES
 		target.fleet_hiring_request = source.name
 

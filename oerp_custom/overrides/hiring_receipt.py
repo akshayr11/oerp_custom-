@@ -289,6 +289,13 @@ def create_purchase_receipt(hiring_receipt_name):
 	}
 
 	def set_missing_values(source, target):
+		# get_mapped_doc copies over any field the source and target share
+		# by name — Purchase Order and Purchase Receipt both have their own
+		# separate workflow_state, so without this a fresh PR would start
+		# pre-set to whatever state the PO ended up in (e.g. "Approved"),
+		# which its own workflow then rejects as an invalid transition from
+		# a document that's supposed to still be new/Draft.
+		target.workflow_state = None
 		target.supplier_delivery_note = hr.name
 		target.custom_hiring_receipt = hr.name
 		target.custom_total_amount = hr.total_amount

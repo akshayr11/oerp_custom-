@@ -56,6 +56,13 @@ def create_purchase_order(source_name):
 	company = _get_company(source)
 
 	def set_missing_values(source, target):
+		# get_mapped_doc copies over any field the source and target share
+		# by name — Hiring Contract and Purchase Order both have their own
+		# separate workflow_state, so without this a fresh PO would start
+		# pre-set to "Approved" (the contract's own final state), which its
+		# own workflow then rejects as an invalid transition from a
+		# document that's supposed to still be new/Draft.
+		target.workflow_state = None
 		target.company = company
 		target.supplier = source.vendor
 		target.purchase_order_type = "Local"
