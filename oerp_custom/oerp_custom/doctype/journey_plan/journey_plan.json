@@ -1,0 +1,277 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-09-29 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "amended_from",
+  "departure_date",
+  "vehicle_no",
+  "column_break_1",
+  "driver_name",
+  "driver_mobile_number",
+  "section_break_1",
+  "journey_manager_name",
+  "journey_manager_mobile_no",
+  "column_break_2",
+  "no_of_passengers",
+  "section_break_checklist",
+  "is_journey_necessary",
+  "will_reach_destination_before_dark",
+  "column_break_3",
+  "can_be_combined_with_another_journey",
+  "reason_if_not_combined",
+  "section_break_4",
+  "vehicle_daily_check",
+  "counselling_for_driver",
+  "column_break_5",
+  "night_driving",
+  "reason_for_night_driving",
+  "section_break_meter",
+  "meter_reading_type",
+  "column_break_6",
+  "meter_reading_value",
+  "section_break_routes",
+  "routes",
+  "section_break_passengers",
+  "passengers",
+  "section_break_rejection",
+  "rejection_remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Naming Series",
+   "options": "ALG/T-L/JP/.YY./.#####"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Journey Plan",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "departure_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Departure Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vehicle No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "driver_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Driver Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "driver_mobile_number",
+   "fieldtype": "Data",
+   "label": "Driver Mobile Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Journey Manager"
+  },
+  {
+   "fieldname": "journey_manager_name",
+   "fieldtype": "Data",
+   "label": "Journey Manager Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "journey_manager_mobile_no",
+   "fieldtype": "Data",
+   "label": "Journey Manager Mobile No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "no_of_passengers",
+   "fieldtype": "Int",
+   "label": "No. of Passengers",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_checklist",
+   "fieldtype": "Section Break",
+   "label": "Checklist"
+  },
+  {
+   "default": "Yes",
+   "fieldname": "is_journey_necessary",
+   "fieldtype": "Select",
+   "label": "Is Journey Necessary?",
+   "options": "Yes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "will_reach_destination_before_dark",
+   "fieldtype": "Select",
+   "label": "Will the Driver Reach Destination Before Dark?",
+   "options": "Yes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "can_be_combined_with_another_journey",
+   "fieldtype": "Select",
+   "label": "Can It Be Combined With Another Journey?",
+   "options": "Yes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reason_if_not_combined",
+   "fieldtype": "Small Text",
+   "label": "Reason If Not Combined",
+   "mandatory_depends_on": "eval:doc.can_be_combined_with_another_journey=='No'"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "No",
+   "fieldname": "vehicle_daily_check",
+   "fieldtype": "Select",
+   "label": "Vehicle Daily Check",
+   "options": "Yes\nNo",
+   "reqd": 1
+  },
+  {
+   "default": "No",
+   "fieldname": "counselling_for_driver",
+   "fieldtype": "Select",
+   "label": "Counselling for Driver",
+   "options": "Yes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "No",
+   "fieldname": "night_driving",
+   "fieldtype": "Select",
+   "label": "Night Driving",
+   "options": "Yes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reason_for_night_driving",
+   "fieldtype": "Small Text",
+   "label": "Reason for Night Driving",
+   "mandatory_depends_on": "eval:doc.night_driving=='Yes'"
+  },
+  {
+   "fieldname": "section_break_meter",
+   "fieldtype": "Section Break",
+   "label": "Meter Reading"
+  },
+  {
+   "fieldname": "meter_reading_type",
+   "fieldtype": "Select",
+   "label": "Meter Reading Type",
+   "options": "KM\nMiles\nHours",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "meter_reading_value",
+   "fieldtype": "Float",
+   "label": "Meter Reading Value",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_routes",
+   "fieldtype": "Section Break",
+   "label": "Routes"
+  },
+  {
+   "fieldname": "routes",
+   "fieldtype": "Table",
+   "options": "Journey Plan Route"
+  },
+  {
+   "fieldname": "section_break_passengers",
+   "fieldtype": "Section Break",
+   "label": "Passengers"
+  },
+  {
+   "fieldname": "passengers",
+   "fieldtype": "Table",
+   "options": "Journey Plan Passenger"
+  },
+  {
+   "fieldname": "section_break_rejection",
+   "fieldtype": "Section Break",
+   "label": "Rejection"
+  },
+  {
+   "fieldname": "rejection_remarks",
+   "fieldtype": "Small Text",
+   "label": "Rejection Remarks",
+   "mandatory_depends_on": "eval:doc.workflow_state=='Rejected'"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "module": "Oerp Custom",
+ "name": "Journey Plan",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

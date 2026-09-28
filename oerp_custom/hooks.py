@@ -115,6 +115,7 @@ fixtures = [
                     "Contract Extension",
                     "Equipment Timesheet",
                     "Hiring Receipt",
+                    "Journey Plan",
                 ],
             ]
         ],
@@ -128,6 +129,12 @@ override_whitelisted_methods = {
         "oerp_custom.overrides.service_naming.make_purchase_order",
     "erpnext.stock.get_item_details.get_item_details":
         "oerp_custom.overrides.get_item_details_patch.get_item_details",
+}
+
+scheduler_events = {
+    "daily": [
+        "oerp_custom.overrides.equipment_certificate.notify_expiring_certificates",
+    ],
 }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}

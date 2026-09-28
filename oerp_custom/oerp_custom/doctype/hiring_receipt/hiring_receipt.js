@@ -28,7 +28,54 @@ frappe.ui.form.on("Hiring Receipt", {
 			};
 		});
 	},
+
+	refresh(frm) {
+		if (frm.doc.hiring_contract && frm.doc.service_month && frm.doc.service_year) {
+			frm.add_custom_button(__("Timesheets"), () => get_timesheets(frm), __("Get Items From"));
+		}
+	},
 });
+
+function get_timesheets(frm) {
+	frappe.call({
+		method: "oerp_custom.overrides.hiring_receipt.get_timesheets_for_period",
+		args: {
+			hiring_contract: frm.doc.hiring_contract,
+			service_month: frm.doc.service_month,
+			service_year: frm.doc.service_year,
+		},
+		callback(r) {
+			const rows = r.message || [];
+			if (!rows.length) {
+				frappe.msgprint(__("No Approved timesheets found for this contract and service month/year."));
+				return;
+			}
+
+			const existing = new Set(
+				(frm.doc.timesheets || []).map((row) => `${row.timesheet}::${row.equipment}`)
+			);
+			let added = 0;
+			rows.forEach((data) => {
+				const key = `${data.timesheet}::${data.equipment}`;
+				if (existing.has(key)) {
+					return;
+				}
+				const row = frm.add_child("timesheets");
+				Object.entries(data).forEach(([fieldname, value]) => {
+					frappe.model.set_value(row.doctype, row.name, fieldname, value);
+				});
+				added += 1;
+			});
+
+			frm.refresh_field("timesheets");
+			update_totals(frm);
+			frappe.show_alert({
+				message: __("{0} row(s) added, {1} already present.", [added, rows.length - added]),
+				indicator: "green",
+			});
+		},
+	});
+}
 
 frappe.ui.form.on("Hiring Receipt Timesheet", {
 	timesheet(frm, cdt, cdn) {

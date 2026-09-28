@@ -11,6 +11,7 @@
   "equipment_description",
   "uom",
   "billing_frequency",
+  "monthly_rate",
   "rate",
   "service_from",
   "service_to",
@@ -67,9 +68,16 @@
    "read_only": 1
   },
   {
+   "fieldname": "monthly_rate",
+   "fieldtype": "Currency",
+   "label": "Monthly Rate",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
    "fieldname": "rate",
    "fieldtype": "Currency",
-   "label": "Rate",
+   "label": "Hourly Rate",
    "options": "currency",
    "read_only": 1
   },

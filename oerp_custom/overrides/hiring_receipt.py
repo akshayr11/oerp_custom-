@@ -167,11 +167,13 @@ def get_row_details(hiring_contract, timesheet, equipment):
 	billing_frequency = contract_row.frequency or "Daily"
 	days_worked = sum(1 for f in DAY_FIELDS if flt(ts_row.get(f)) > 0)
 
+	monthly_rate = 0
 	if billing_frequency == "Monthly":
 		threshold = flt(frappe.db.get_value("Hiring Contract", hiring_contract, "total_operational_hours"))
 		capacity_hours = _month_capacity_hours(ts.service_from_date, threshold)
 		quantity = flt(ts_row.normal_hours) + flt(ts_row.overtime_hours)
-		rate = flt(flt(contract_row.rate) / capacity_hours, 4) if capacity_hours else 0
+		monthly_rate = flt(contract_row.rate)
+		rate = flt(monthly_rate / capacity_hours, 4) if capacity_hours else 0
 		uom = "Hour"
 		amount = flt(ts_row.normal_hours) * flt(rate)
 	else:
@@ -198,6 +200,7 @@ def get_row_details(hiring_contract, timesheet, equipment):
 		"equipment_description": f"{ts_row.equipment_name or equipment} ({ts_row.vehicle_number or ''})".strip(),
 		"uom": uom,
 		"billing_frequency": billing_frequency,
+		"monthly_rate": monthly_rate,
 		"rate": rate,
 		"service_from": ts.service_from_date,
 		"service_to": ts.service_to_date,
@@ -215,6 +218,41 @@ def get_row_details(hiring_contract, timesheet, equipment):
 		"vat_amount": vat_amount,
 		"net_amount_incl_vat": net_amount + vat_amount,
 	}
+
+
+@frappe.whitelist()
+def get_timesheets_for_period(hiring_contract, service_month, service_year):
+	"""Every Approved timesheet against this contract for this service
+	month/year, with every one of its equipment rows already resolved —
+	backs the "Get Timesheets" button, so the user doesn't have to add
+	each timesheet/equipment pair one at a time through the grid.
+	"""
+	timesheets = frappe.db.sql(
+		"""
+		select name
+		from `tabEquipment Timesheet`
+		where hiring_contract = %(hiring_contract)s
+		  and docstatus = 1
+		  and workflow_state = 'Approved'
+		  and month(service_from_date) = %(month_num)s
+		  and year(service_from_date) = %(year)s
+		order by name
+		""",
+		{
+			"hiring_contract": hiring_contract,
+			"month_num": MONTH_NUM.get(service_month),
+			"year": service_year,
+		},
+		as_dict=True,
+	)
+
+	rows = []
+	for ts in timesheets:
+		ts_doc = frappe.get_doc("Equipment Timesheet", ts.name)
+		for detail in ts_doc.details:
+			details = get_row_details(hiring_contract, ts.name, detail.equipment)
+			rows.append({"timesheet": ts.name, "equipment": detail.equipment, **details})
+	return rows
 
 
 def _month_capacity_hours(service_from_date, daily_threshold):
