@@ -25,5 +25,14 @@
   "name": "Transport Officer Final Approval",
   "style": "",
   "workflow_state_name": "Transport Officer Final Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-09-29 13:35:02.983720",
+  "name": "Executed",
+  "style": "",
+  "workflow_state_name": "Executed"
  }
 ]

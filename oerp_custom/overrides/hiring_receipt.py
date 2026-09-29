@@ -49,12 +49,20 @@ At Purchase Receipt time: qty = Normal Hours / that month's capacity hours
 (a month fraction, e.g. 285/300 = 0.95 — OT hours are excluded from this
 conversion the same way they're excluded from Amount), rate = the
 contract's original monthly Rate (e.g. 1500), uom = a real "Month" UOM
-record (created on first use — see _ensure_uom). The PR's own qty x rate
-therefore only ever reflects Total Amount, not Net Amount — OT Amount and
-Deduction are carried across as their own custom fields on the Purchase
-Receipt header instead (custom_ot_amount, custom_deduction_amount,
-custom_net_amount), copied straight from this voucher's own header, rather
-than folded into a line item.
+record (created on first use — see _ensure_uom). qty and stock_qty carry a
+Property Setter raising their precision to 6 (Purchase Receipt Item's own
+default falls back to System Settings' float_precision, 3 on this site —
+nowhere near enough for a fraction like 0.966666..., which would otherwise
+get silently rounded to 0.967 before it's even saved).
+
+The PR's own qty x rate therefore only ever reflects each row's own Amount,
+not its Net Amount — OT Amount, Deduction and Net Amount are carried across
+as their own custom fields on each Purchase Receipt Item row instead
+(custom_total_amount, custom_ot_amount, custom_deduction_amount,
+custom_net_amount — one set per equipment, not blended into a single
+header total), copied straight from that equipment's own Hiring Receipt
+row. The header's own custom_total_amount is still the simple sum across
+rows (hr.total_amount), for a quick top-line figure.
 
 VAT: a simplified version of ERPNext's own Item Tax Template resolution
 (erpnext.stock.get_item_details.get_item_tax_template) — checks the item's
@@ -337,9 +345,6 @@ def create_purchase_receipt(hiring_receipt_name):
 		target.supplier_delivery_note = hr.name
 		target.custom_hiring_receipt = hr.name
 		target.custom_total_amount = hr.total_amount
-		target.custom_ot_amount = hr.total_ot_amount
-		target.custom_deduction_amount = hr.total_deduction_amount
-		target.custom_net_amount = hr.net_amount
 		target.run_method("set_missing_values")
 		target.run_method("calculate_taxes_and_totals")
 
@@ -359,8 +364,7 @@ def create_purchase_receipt(hiring_receipt_name):
 	# Drop the PO's own (unreceived) rows — this receipt is built entirely
 	# from the voucher's rows instead, so the quantities match exactly what
 	# was approved on the voucher, not "whatever is still outstanding on
-	# the PO". OT Amount/Deduction don't appear in these lines at all — see
-	# the module docstring — they're on the header's own custom fields.
+	# the PO".
 	pr.items = []
 
 	for row in hr.timesheets:
@@ -385,6 +389,12 @@ def create_purchase_receipt(hiring_receipt_name):
 				"purchase_order": po_name,
 				"purchase_order_item": po_item_name,
 				"schedule_date": row.service_to,
+				"custom_total_amount": row.amount,
+				"custom_ot_amount": row.ot_amount,
+				"custom_deduction_amount": row.deduction_amount,
+				"custom_net_amount": row.net_amount,
+				"custom_vat_amount": row.vat_amount,
+				"custom_net_amount_with_vat": row.net_amount_incl_vat,
 			},
 		)
 

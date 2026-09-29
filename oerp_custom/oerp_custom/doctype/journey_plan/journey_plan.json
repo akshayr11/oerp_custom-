@@ -38,6 +38,9 @@
   "routes",
   "section_break_passengers",
   "passengers",
+  "section_break_closure",
+  "closure_meter_reading",
+  "specific_journey_details",
   "section_break_rejection",
   "rejection_remarks"
  ],
@@ -233,6 +236,25 @@
    "fieldname": "passengers",
    "fieldtype": "Table",
    "options": "Journey Plan Passenger"
+  },
+  {
+   "fieldname": "section_break_closure",
+   "fieldtype": "Section Break",
+   "label": "Closure"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "closure_meter_reading",
+   "fieldtype": "Float",
+   "label": "Current Meter Reading",
+   "mandatory_depends_on": "eval:doc.workflow_state=='Executed'"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "specific_journey_details",
+   "fieldtype": "Small Text",
+   "label": "Specific Journey Details",
+   "mandatory_depends_on": "eval:doc.workflow_state=='Executed'"
   },
   {
    "fieldname": "section_break_rejection",

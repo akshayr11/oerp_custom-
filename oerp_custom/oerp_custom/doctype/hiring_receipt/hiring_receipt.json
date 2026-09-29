@@ -172,7 +172,8 @@
    "fieldtype": "Currency",
    "label": "Total Amount",
    "options": "currency",
-   "read_only": 1
+   "read_only": 1,
+   "precision": "6"
   },
   {
    "fieldname": "column_break_5",
@@ -183,7 +184,8 @@
    "fieldtype": "Currency",
    "label": "Total OT Amount",
    "options": "currency",
-   "read_only": 1
+   "read_only": 1,
+   "precision": "6"
   },
   {
    "fieldname": "column_break_6",
@@ -194,7 +196,8 @@
    "fieldtype": "Currency",
    "label": "Total Deduction",
    "options": "currency",
-   "read_only": 1
+   "read_only": 1,
+   "precision": "6"
   },
   {
    "fieldname": "column_break_totals_1",
@@ -205,7 +208,8 @@
    "fieldtype": "Currency",
    "label": "Net Amount",
    "options": "currency",
-   "read_only": 1
+   "read_only": 1,
+   "precision": "6"
   },
   {
    "fieldname": "column_break_totals_2",
@@ -216,7 +220,8 @@
    "fieldtype": "Currency",
    "label": "Total VAT Amount",
    "options": "currency",
-   "read_only": 1
+   "read_only": 1,
+   "precision": "6"
   },
   {
    "fieldname": "column_break_totals_3",
@@ -227,7 +232,8 @@
    "fieldtype": "Currency",
    "label": "Grand Total",
    "options": "currency",
-   "read_only": 1
+   "read_only": 1,
+   "precision": "6"
   },
   {
    "fieldname": "section_break_remarks",

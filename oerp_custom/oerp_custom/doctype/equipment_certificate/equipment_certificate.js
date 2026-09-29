@@ -11,8 +11,9 @@ frappe.ui.form.on("Equipment Certificate", {
 	refresh(frm) {
 		if (!frm.is_new()) {
 			frm.add_custom_button(__("Renewal"), () => {
-				frappe.new_doc("Equipment Certificate Renewal", {
-					equipment_certificate: frm.doc.name,
+				frappe.new_doc("Equipment Certificate Renewal", { equipment: frm.doc.equipment }, (doc) => {
+					const row = frappe.model.add_child(doc, "Equipment Certificate Renewal Detail", "renewals");
+					row.equipment_certificate = frm.doc.name;
 				});
 			}, __("Create"));
 		}

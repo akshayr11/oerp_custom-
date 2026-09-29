@@ -8,23 +8,13 @@
  "field_order": [
   "naming_series",
   "amended_from",
-  "equipment_certificate",
   "equipment",
   "equipment_name",
-  "certificate_type",
   "column_break_1",
-  "previous_issue_date",
-  "previous_expiry_date",
-  "section_break_1",
-  "new_issue_date",
-  "column_break_2",
-  "new_expiry_date",
-  "column_break_3",
-  "certificate_number",
-  "section_break_2",
   "renewed_by",
-  "column_break_4",
   "renewal_date",
+  "section_break_1",
+  "renewals",
   "section_break_3",
   "attachment",
   "remarks"
@@ -48,90 +38,23 @@
    "search_index": 1
   },
   {
-   "fieldname": "equipment_certificate",
+   "fieldname": "equipment",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Equipment Certificate",
-   "options": "Equipment Certificate",
+   "label": "Equipment",
+   "options": "Item",
    "reqd": 1
   },
   {
-   "fetch_from": "equipment_certificate.equipment",
-   "fieldname": "equipment",
-   "fieldtype": "Link",
-   "label": "Equipment",
-   "options": "Item",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "equipment_certificate.equipment_name",
+   "fetch_from": "equipment.item_name",
    "fieldname": "equipment_name",
    "fieldtype": "Data",
    "label": "Equipment Name",
    "read_only": 1
   },
   {
-   "fetch_from": "equipment_certificate.certificate_type",
-   "fieldname": "certificate_type",
-   "fieldtype": "Link",
-   "label": "Certificate Type",
-   "options": "Equipment Certificate Master",
-   "read_only": 1
-  },
-  {
    "fieldname": "column_break_1",
    "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "equipment_certificate.issue_date",
-   "fieldname": "previous_issue_date",
-   "fieldtype": "Date",
-   "label": "Previous Issue Date",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "equipment_certificate.expiry_date",
-   "fieldname": "previous_expiry_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Previous Expiry Date",
-   "read_only": 1
-  },
-  {
-   "fieldname": "section_break_1",
-   "fieldtype": "Section Break",
-   "label": "Renewal"
-  },
-  {
-   "fieldname": "new_issue_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "New Issue Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "new_expiry_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "New Expiry Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "certificate_number",
-   "fieldtype": "Data",
-   "label": "Certificate Number"
-  },
-  {
-   "fieldname": "section_break_2",
-   "fieldtype": "Section Break"
   },
   {
    "default": "__user",
@@ -142,14 +65,21 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_4",
-   "fieldtype": "Column Break"
-  },
-  {
    "default": "Today",
    "fieldname": "renewal_date",
    "fieldtype": "Date",
    "label": "Renewal Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Certificates Renewed"
+  },
+  {
+   "fieldname": "renewals",
+   "fieldtype": "Table",
+   "options": "Equipment Certificate Renewal Detail",
    "reqd": 1
   },
   {

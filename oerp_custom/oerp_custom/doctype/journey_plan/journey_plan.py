@@ -11,6 +11,16 @@ class JourneyPlan(Document):
 		self.no_of_passengers = len(self.get("passengers") or [])
 		self.validate_checklist_reasons()
 		self.validate_rejection_remarks()
+		self.validate_closure_fields()
+
+	def before_update_after_submit(self):
+		"""The Execute transition edits an already-submitted document, so
+		Frappe runs this hook instead of validate() (see run_before_save_methods
+		in frappe/model/document.py — validate() is only called for the
+		"save"/"submit" actions, never for "update_after_submit"). Without this,
+		the mandatory closure check below would silently never run.
+		"""
+		self.validate_closure_fields()
 
 	def validate_checklist_reasons(self):
 		"""mandatory_depends_on on these fields only enforces this in the
@@ -32,5 +42,23 @@ class JourneyPlan(Document):
 		if self.workflow_state == "Rejected" and not (self.rejection_remarks or "").strip():
 			frappe.throw(
 				_("Rejection Remarks is mandatory when rejecting a Journey Plan."),
+				frappe.MandatoryError,
+			)
+
+	def validate_closure_fields(self):
+		"""mandatory_depends_on on these fields only enforces this in the
+		browser — re-checked here so apply_workflow calls, the API and Data
+		Import can't skip closure either.
+		"""
+		if self.workflow_state != "Executed":
+			return
+		if not self.closure_meter_reading:
+			frappe.throw(
+				_("Current Meter Reading is mandatory when executing a Journey Plan."),
+				frappe.MandatoryError,
+			)
+		if not (self.specific_journey_details or "").strip():
+			frappe.throw(
+				_("Specific Journey Details is mandatory when executing a Journey Plan."),
 				frappe.MandatoryError,
 			)

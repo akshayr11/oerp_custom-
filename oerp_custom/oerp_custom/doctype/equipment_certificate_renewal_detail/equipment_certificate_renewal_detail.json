@@ -1,0 +1,80 @@
+{
+ "actions": [],
+ "creation": "2026-09-29 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "equipment_certificate",
+  "certificate_type",
+  "previous_issue_date",
+  "previous_expiry_date",
+  "new_issue_date",
+  "new_expiry_date",
+  "certificate_number"
+ ],
+ "fields": [
+  {
+   "fieldname": "equipment_certificate",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Equipment Certificate",
+   "options": "Equipment Certificate",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "equipment_certificate.certificate_type",
+   "fieldname": "certificate_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Certificate Type",
+   "options": "Equipment Certificate Master",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "equipment_certificate.issue_date",
+   "fieldname": "previous_issue_date",
+   "fieldtype": "Date",
+   "label": "Previous Issue Date",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "equipment_certificate.expiry_date",
+   "fieldname": "previous_expiry_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Previous Expiry Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "new_issue_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "New Issue Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "new_expiry_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "New Expiry Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "certificate_number",
+   "fieldtype": "Data",
+   "label": "Certificate Number"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "module": "Oerp Custom",
+ "name": "Equipment Certificate Renewal Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

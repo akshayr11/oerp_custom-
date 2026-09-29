@@ -100,8 +100,12 @@ fixtures = [
     {
         "dt": "Workflow State",
         "filters": [
-            ["name", "in", ["Site Manager Approval", "Contract Manager Approval", "Transport Officer Final Approval"]]
+            ["name", "in", ["Site Manager Approval", "Contract Manager Approval", "Transport Officer Final Approval", "Executed"]]
         ],
+    },
+    {
+        "dt": "Workflow Action Master",
+        "filters": [["name", "in", ["Execute"]]],
     },
     {
         "dt": "Workflow",
