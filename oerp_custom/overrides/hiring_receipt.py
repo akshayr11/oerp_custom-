@@ -20,25 +20,26 @@ running (e.g. 1500 for September's 300 "normal" hours = 30 days x a 10hr/day
 cap from the Hiring Contract's Total Operational Hours). Normal running and
 Overtime are billed at two different rates, not blended into one quantity:
 
-    Rate        = contract Rate / that month's capacity hours, rounded to 4
-                  decimal places (e.g. 1450 / 300 = 4.8333, not the raw
-                  4.833333...) — Amount is computed from this rounded rate,
-                  not the unrounded division
+    Rate        = contract Rate / that month's capacity hours, rounded to 6
+                  decimal places — the "rate" field's own Currency precision
+                  (6) — not the coarser 4 used earlier, so Amount below is
+                  computed from as exact a rate as the field can even hold
+                  (e.g. 1450 / 300 = 4.833333, not 4.8333)
     Quantity    = Normal + OT hours, shown for reference only (the UOM here
                   is Hourly) — it is NOT what Amount is based on
-    Amount      = Normal Hours x (rounded) Rate only (e.g. 270 x 4.8333 =
-                  1304.991) — Overtime is deliberately excluded here
+    Amount      = Normal Hours x (6-decimal) Rate only (e.g. 270 x 4.833333 =
+                  1304.99991) — Overtime is deliberately excluded here
     OT Rate     = entered by the user (no OT rate on the contract to fetch)
     OT Amount   = OT Hours x OT Rate (e.g. 5 x 6 = 30)
     Deduction   = entered by the user directly on this row (no contract or
                   timesheet field to fetch it from — Equipment Timesheet
                   carries no amounts at all, only hours)
-    Net Amount  = Amount + OT Amount - Deduction (e.g. 1304.991 + 30 - 0 =
-                  1334.991) — this, not Amount, is what VAT is based on.
-    VAT Amount  = Net Amount x the item's VAT rate (e.g. 5% of 1334.991 =
-                  66.74955)
-    Net Amount (Incl. VAT) = Net Amount + VAT Amount (e.g. 1334.991 +
-                  66.74955 = 1401.74055) — row-level only, shown for
+    Net Amount  = Amount + OT Amount - Deduction (e.g. 1304.99991 + 30 - 0 =
+                  1334.99991) — this, not Amount, is what VAT is based on.
+    VAT Amount  = Net Amount x the item's VAT rate (e.g. 5% of 1334.99991 =
+                  66.7499955)
+    Net Amount (Incl. VAT) = Net Amount + VAT Amount (e.g. 1334.99991 +
+                  66.7499955 = 1401.7499055) — row-level only, shown for
                   reference; the header's own Grand Total is the rollup.
 
 The header rolls up all four figures across rows (HiringReceipt.
@@ -181,7 +182,10 @@ def get_row_details(hiring_contract, timesheet, equipment):
 		capacity_hours = _month_capacity_hours(ts.service_from_date, threshold)
 		quantity = flt(ts_row.normal_hours) + flt(ts_row.overtime_hours)
 		monthly_rate = flt(contract_row.rate)
-		rate = flt(monthly_rate / capacity_hours, 4) if capacity_hours else 0
+		# Full precision here, not rounded early — the "rate" field's own
+		# Currency precision (6) is what actually caps it on save, so Amount
+		# below is computed from as exact a rate as that allows.
+		rate = flt(monthly_rate / capacity_hours, 6) if capacity_hours else 0
 		uom = "Hour"
 		amount = flt(ts_row.normal_hours) * flt(rate)
 	else:
