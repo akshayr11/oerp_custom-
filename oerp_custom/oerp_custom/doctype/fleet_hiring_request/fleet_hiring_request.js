@@ -2,9 +2,9 @@
 // For license information, please see license.txt
 
 // Equipment rows only offer service items filed under the
-// "Vehicle and Equipment Hiring" Item Group — same is_stock_item = 0
+// "Vehicle/Equipment Hiring" Item Group — same is_stock_item = 0
 // convention Material Request uses for its own service-item filtering.
-const EQUIPMENT_ITEM_GROUP = "Vehicle and Equipment Hiring";
+const EQUIPMENT_ITEM_GROUP = "Vehicle/Equipment Hiring";
 
 frappe.ui.form.on("Fleet Hiring Request", {
 	setup(frm) {

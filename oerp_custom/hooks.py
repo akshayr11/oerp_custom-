@@ -84,7 +84,12 @@ doc_events = {
             # Item Group mirrors the selected Service Type's own category.
             "oerp_custom.overrides.item.sync_item_group_from_service_type",
         ]
-    }
+    },
+    "Purchase Receipt": {
+        # Item-level only — see overrides/purchase_receipt.py for why this
+        # doesn't touch the document's own Net Total/Grand Total.
+        "validate": "oerp_custom.overrides.purchase_receipt.sync_net_amount_display",
+    },
 }
 
 # Data records this app depends on but that don't live in any doctype/*.json
