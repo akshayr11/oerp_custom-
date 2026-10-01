@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "naming_series:",
- "creation": "2026-09-29 00:00:00.000000",
+ "creation": "2026-09-29 00:00:00",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -15,6 +15,7 @@
   "equipment_name",
   "reg_no",
   "section_break_1",
+  "fine_type",
   "fine_date",
   "amount",
   "section_break_2",
@@ -106,12 +107,21 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "fieldname": "fine_type",
+   "fieldtype": "Link",
+   "label": "Fine Type",
+   "options": "Fine Type Master",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
+ "modified": "2026-09-30 13:35:48.111557",
+ "modified_by": "Administrator",
  "module": "Oerp Custom",
  "name": "Employee Fines",
  "naming_rule": "By \"Naming Series\" field",
