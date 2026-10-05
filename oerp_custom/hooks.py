@@ -90,6 +90,9 @@ doc_events = {
         # doesn't touch the document's own Net Total/Grand Total.
         "validate": "oerp_custom.overrides.purchase_receipt.sync_net_amount_display",
     },
+    "Supplier Quotation": {
+        "validate": "oerp_custom.overrides.supplier_quotation.validate_no_duplicate_rfq_quotation",
+    },
 }
 
 # Data records this app depends on but that don't live in any doctype/*.json
