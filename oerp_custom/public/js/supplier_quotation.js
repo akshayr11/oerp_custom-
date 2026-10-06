@@ -18,6 +18,7 @@
 frappe.ui.form.on('Supplier Quotation', {
     refresh: function(frm) {
         backfill_all_cost_centers(frm);
+        hide_material_request_for_non_system_managers(frm);
     },
 
     items_add: function(frm, cdt, cdn) {
@@ -48,6 +49,17 @@ function fetch_rfq_cost_center(frm, cdt, cdn) {
     }).catch((err) => {
         console.error('get_rfq_item_cost_center failed:', err);
     });
+}
+
+// Under "Get Items From", "Material Request" is System Manager only, by
+// request; "Request for Quotation" in the same group stays visible to
+// everyone. Runs after core's own refresh handler has already built the
+// group (this app's doctype_js loads after erpnext's, per apps.txt order),
+// so the button already exists to remove.
+function hide_material_request_for_non_system_managers(frm) {
+    if (frappe.user.has_role('System Manager')) return;
+
+    frm.remove_custom_button('Material Request', 'Get Items From');
 }
 
 function backfill_all_cost_centers(frm) {

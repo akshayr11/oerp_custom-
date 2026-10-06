@@ -21,6 +21,7 @@
 frappe.ui.form.on('Request for Quotation', {
     refresh: function(frm) {
         backfill_all_cost_centers(frm);
+        hide_opportunity_and_possible_supplier_for_non_system_managers(frm);
 
         // --- SQ Comparison button (submitted RFQs only) ---
         if (frm.doc.docstatus === 1) {
@@ -97,6 +98,22 @@ function apply_default_company_cost_center(frm, cdt, cdn, silent = false) {
         .catch((err) => {
             console.error('get_value failed (Company default cost center):', err);
         });
+}
+
+// Under the "Get Items From" group, "Material Request" stays visible to
+// everyone; "Opportunity" and "Possible Supplier" (core ERPNext buttons)
+// are System Manager only, by request. Under "Tools", "Link to Material
+// Requests" and "Get Suppliers" are System Manager only too, same request.
+// Runs after core's own refresh handler has already built both groups
+// (this app's doctype_js loads after erpnext's, per apps.txt order), so
+// the buttons already exist to remove.
+function hide_opportunity_and_possible_supplier_for_non_system_managers(frm) {
+    if (frappe.user.has_role('System Manager')) return;
+
+    frm.remove_custom_button('Opportunity', 'Get Items From');
+    frm.remove_custom_button('Possible Supplier', 'Get Items From');
+    frm.remove_custom_button('Link to Material Requests', 'Tools');
+    frm.remove_custom_button('Get Suppliers', 'Tools');
 }
 
 function backfill_all_cost_centers(frm) {

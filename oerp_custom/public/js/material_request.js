@@ -35,6 +35,7 @@ frappe.ui.form.on("Material Request", {
 
 	refresh(frm) {
 		set_item_filter(frm);
+		hide_get_items_from_for_non_system_managers(frm);
 
 		// Only auto-populate Required By for brand-new documents. Opening an
 		// already-saved MR should never silently dirty the form.
@@ -233,4 +234,18 @@ function update_last_purchase_uom(frm, cdt, cdn) {
 			console.error("Failed to get last purchase UOM:", r);
 		}
 	});
+}
+
+// "Get Items From" (Bill of Materials / Sales Order / Product Bundle) is
+// core ERPNext's own button group — System Manager only here, by request.
+// Runs after core's own refresh handler has already built the group (this
+// app's doctype_js loads after erpnext's, per apps.txt order), so it's
+// already in the DOM to hide by the time this fires.
+function hide_get_items_from_for_non_system_managers(frm) {
+	if (frappe.user.has_role("System Manager")) return;
+
+	const group = frm.page.get_inner_group_button(__("Get Items From"));
+	if (group && group.length) {
+		group.hide();
+	}
 }

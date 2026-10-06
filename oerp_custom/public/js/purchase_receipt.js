@@ -14,6 +14,7 @@ frappe.ui.form.on("Purchase Receipt", {
 
 	refresh(frm) {
 		set_pr_details_from_source(frm);
+		hide_sample_retention_stock_entry_for_non_system_managers(frm);
 	},
 
 	items_add(frm) {
@@ -27,6 +28,18 @@ frappe.ui.form.on("Purchase Receipt", {
 		frm.set_value("naming_series", PR_SERIES_BY_TYPE[frm.doc.custom_purchase_type] || PR_DEFAULT_SERIES);
 	},
 });
+
+// Under "Create", "Sample Retention Stock Entry" is System Manager only, by
+// request; the other Create actions (Landed Cost Voucher, Purchase Return,
+// Make Stock Entry, Purchase Invoice) stay visible to everyone. Runs after
+// core's own refresh handler has already built the group (this app's
+// doctype_js loads after erpnext's, per apps.txt order), so the button
+// already exists to remove.
+function hide_sample_retention_stock_entry_for_non_system_managers(frm) {
+	if (frappe.user.has_role("System Manager")) return;
+
+	frm.remove_custom_button("Sample Retention Stock Entry", "Create");
+}
 
 function set_pr_details_from_source(frm) {
 	if (!frm.is_new()) {

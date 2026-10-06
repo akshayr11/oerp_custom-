@@ -46,6 +46,7 @@ frappe.ui.form.on("Purchase Order", {
 	refresh(frm) {
 		set_contract_query(frm);
 		set_service_type_from_items(frm);
+		hide_material_request_and_product_bundle_for_non_system_managers(frm);
 	},
 
 	items_add(frm) {
@@ -100,6 +101,22 @@ frappe.ui.form.on("Purchase Order Item", {
 		}
 	},
 });
+
+// Under "Get Items From", "Material Request" and "Product Bundle" are
+// System Manager only, by request; "Supplier Quotation" in the same group
+// stays visible to everyone. Under "Tools", "Update Rate as per Last
+// Purchase" and "Link to Material Request" are System Manager only too,
+// same request. Runs after core's own refresh handler has already built
+// both groups (this app's doctype_js loads after erpnext's, per apps.txt
+// order), so the buttons already exist to remove.
+function hide_material_request_and_product_bundle_for_non_system_managers(frm) {
+	if (frappe.user.has_role("System Manager")) return;
+
+	frm.remove_custom_button("Material Request", "Get Items From");
+	frm.remove_custom_button("Product Bundle", "Get Items From");
+	frm.remove_custom_button("Update Rate as per Last Purchase", "Tools");
+	frm.remove_custom_button("Link to Material Request", "Tools");
+}
 
 function resolve_row_contract(frm, cdt, cdn) {
 	const row = locals[cdt][cdn];
