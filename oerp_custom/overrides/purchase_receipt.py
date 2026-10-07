@@ -25,7 +25,19 @@ Only "On Net Total" tax rows are recomputed here — the only charge_type
 actually in use for the VAT row this exists for. Other charge types
 (Actual, On Previous Row Amount/Total, On Item Quantity) are left as
 ERPNext already computed them, since they don't derive from Net Total.
+
+A tax row driven by an Item Tax Template (tax.set_by_item_tax_template=1,
+the normal case here since each item carries its own item_tax_template)
+has tax.rate = 0 on the header row itself — the real per-item rate lives in
+each item's own item_tax_rate JSON ({account_head: rate}), looked up per
+item exactly like ERPNext's own calculate_taxes() does (see
+get_current_tax_and_net_amount/_get_tax_rate in
+erpnext.controllers.taxes_and_totals), falling back to tax.rate only when
+the item has no override for that account_head. Using tax.rate directly
+here would silently compute 0 tax on every item-tax-template-driven row.
 """
+
+import json
 
 from frappe.utils import flt
 
@@ -49,6 +61,17 @@ def sync_net_amount_display(doc, method=None):
 	_recalculate_totals_from_net_amount(doc)
 
 
+def _effective_item_tax_rate(item_row, tax_row):
+	"""Matches erpnext.controllers.taxes_and_totals._get_tax_rate: an
+	item-tax-template-driven rate on the item overrides the tax row's own
+	(usually 0 in that case) rate for that specific account head.
+	"""
+	item_tax_map = json.loads(item_row.item_tax_rate) if item_row.item_tax_rate else {}
+	if tax_row.account_head in item_tax_map:
+		return flt(item_tax_map[tax_row.account_head])
+	return flt(tax_row.rate)
+
+
 def _recalculate_totals_from_net_amount(doc):
 	items = doc.get("items") or []
 	net_total = flt(sum(flt(row.net_amount) for row in items), doc.precision("net_total"))
@@ -66,10 +89,17 @@ def _recalculate_totals_from_net_amount(doc):
 
 	for tax in doc.get("taxes") or []:
 		if tax.charge_type == "On Net Total":
-			tax.tax_amount = flt(net_total * flt(tax.rate) / 100, tax.precision("tax_amount"))
-			tax.base_tax_amount = flt(
-				base_net_total * flt(tax.rate) / 100, tax.precision("base_tax_amount")
-			)
+			tax_amount = 0.0
+			base_tax_amount = 0.0
+			for row in items:
+				effective_rate = _effective_item_tax_rate(row, tax)
+				tax_amount += flt(row.net_amount) * effective_rate / 100
+				base_tax_amount += flt(row.base_net_amount) * effective_rate / 100
+
+			tax.net_amount = net_total
+			tax.base_net_amount = base_net_total
+			tax.tax_amount = flt(tax_amount, tax.precision("tax_amount"))
+			tax.base_tax_amount = flt(base_tax_amount, tax.precision("base_tax_amount"))
 
 		tax.tax_amount_after_discount_amount = tax.tax_amount
 		tax.base_tax_amount_after_discount_amount = tax.base_tax_amount
