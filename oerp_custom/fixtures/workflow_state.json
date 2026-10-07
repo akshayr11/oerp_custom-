@@ -2,6 +2,15 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
+  "icon": "ok-sign",
+  "modified": "2026-08-17 18:49:03.568632",
+  "name": "Approved",
+  "style": "Success",
+  "workflow_state_name": "Approved"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
   "icon": "",
   "modified": "2026-09-21 10:03:18.443009",
   "name": "Site Manager Approval",
@@ -34,5 +43,41 @@
   "name": "Executed",
   "style": "",
   "workflow_state_name": "Executed"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-10-05 14:43:54.339242",
+  "name": "Pending for Approval",
+  "style": "",
+  "workflow_state_name": "Pending for Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-10-07 16:13:12.385786",
+  "name": "Pending for Receipt",
+  "style": "",
+  "workflow_state_name": "Pending for Receipt"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-10-07 16:13:12.657109",
+  "name": "Received",
+  "style": "",
+  "workflow_state_name": "Received"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2026-10-07 16:13:12.659754",
+  "name": "Submitted",
+  "style": "",
+  "workflow_state_name": "Submitted"
  }
 ]

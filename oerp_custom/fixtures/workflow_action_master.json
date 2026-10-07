@@ -2,8 +2,43 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
+  "modified": "2026-08-17 18:49:03.596527",
+  "name": "Approve",
+  "workflow_action_name": "Approve"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
   "modified": "2026-09-29 13:35:03.026529",
   "name": "Execute",
   "workflow_action_name": "Execute"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-10-05 14:43:54.397221",
+  "name": "Send for Approval",
+  "workflow_action_name": "Send for Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-10-07 16:13:12.686004",
+  "name": "Send for Receipt",
+  "workflow_action_name": "Send for Receipt"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-10-07 16:13:12.693569",
+  "name": "Receive",
+  "workflow_action_name": "Receive"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-10-07 16:13:12.695949",
+  "name": "Submit",
+  "workflow_action_name": "Submit"
  }
 ]

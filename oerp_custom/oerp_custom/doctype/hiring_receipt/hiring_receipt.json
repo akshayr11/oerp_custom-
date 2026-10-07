@@ -133,6 +133,7 @@
    "label": "Service Period"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "service_month",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -145,6 +146,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "service_year",
    "fieldtype": "Int",
    "in_list_view": 1,

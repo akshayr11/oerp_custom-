@@ -108,12 +108,12 @@ fixtures = [
     {
         "dt": "Workflow State",
         "filters": [
-            ["name", "in", ["Site Manager Approval", "Contract Manager Approval", "Transport Officer Final Approval", "Executed"]]
+            ["name", "in", ["Site Manager Approval", "Contract Manager Approval", "Transport Officer Final Approval", "Executed", "Pending for Receipt", "Received", "Pending for Approval", "Approved", "Submitted"]]
         ],
     },
     {
         "dt": "Workflow Action Master",
-        "filters": [["name", "in", ["Execute"]]],
+        "filters": [["name", "in", ["Execute", "Send for Receipt", "Receive", "Send for Approval", "Approve", "Submit"]]],
     },
     {
         "dt": "Workflow",
@@ -128,6 +128,7 @@ fixtures = [
                     "Equipment Timesheet",
                     "Hiring Receipt",
                     "Journey Plan",
+                    "Stock Entry",
                 ],
             ]
         ],
