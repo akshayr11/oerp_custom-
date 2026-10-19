@@ -33,7 +33,7 @@ function set_equipment_filter(frm) {
 	frm.set_query("equipment", "equipment", () => {
 		return {
 			filters: {
-				item_group: EQUIPMENT_ITEM_GROUP,
+				item_group: ["descendants of (inclusive)", EQUIPMENT_ITEM_GROUP],
 				is_stock_item: 0,
 				disabled: 0,
 			},
