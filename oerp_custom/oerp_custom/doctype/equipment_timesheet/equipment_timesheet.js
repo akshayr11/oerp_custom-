@@ -17,6 +17,11 @@ frappe.ui.form.on("Equipment Timesheet", {
 			frm.add_custom_button(__("Equipment from Contract"), () => get_equipment_from_contract(frm), __("Get"));
 		}
 
+		if (frm.doc.docstatus === 0) {
+			frm.add_custom_button(__("Download Template"), () => download_template(frm), __("Monthly Sheet"));
+			frm.add_custom_button(__("Upload Timesheet"), () => upload_timesheet(frm), __("Monthly Sheet"));
+		}
+
 		if ((frm.doc.details || []).length) {
 			frm.add_custom_button(__("Apply Same Hours to All"), () => apply_same_hours_dialog(frm));
 		}
@@ -95,6 +100,72 @@ function get_equipment_from_contract(frm) {
 			frm.refresh_field("details");
 		},
 	});
+}
+
+const UPLOAD_METHODS = "oerp_custom.oerp_custom.doctype.equipment_timesheet.equipment_timesheet";
+
+function check_contract_and_period(frm) {
+	if (!frm.doc.hiring_contract || !frm.doc.service_from_date || !frm.doc.service_to_date) {
+		frappe.msgprint(__("Select the Contract, Service From and Service To first."));
+		return false;
+	}
+	return true;
+}
+
+// Sheet with the contract's equipment and one column per day of the period.
+function download_template(frm) {
+	if (!check_contract_and_period(frm)) return;
+	const args = new URLSearchParams({
+		hiring_contract: frm.doc.hiring_contract,
+		service_from_date: frm.doc.service_from_date,
+		service_to_date: frm.doc.service_to_date,
+	});
+	window.open(`/api/method/${UPLOAD_METHODS}.download_template?${args}`);
+}
+
+// Filled sheet -> Details rows (replacing what is there) -> save, which
+// works out the Normal / OT / BD hours on the server.
+function upload_timesheet(frm) {
+	if (!check_contract_and_period(frm)) return;
+
+	const upload = () =>
+		new frappe.ui.FileUploader({
+			allow_multiple: false,
+			make_attachments_public: false,
+			restrictions: { allowed_file_types: [".xlsx", ".csv"] },
+			...(frm.is_new() ? {} : { doctype: frm.doctype, docname: frm.doc.name, folder: "Home/Attachments" }),
+			on_success(file) {
+				frappe.call({
+					method: `${UPLOAD_METHODS}.read_timesheet_file`,
+					args: {
+						file_url: file.file_url,
+						hiring_contract: frm.doc.hiring_contract,
+						service_from_date: frm.doc.service_from_date,
+						service_to_date: frm.doc.service_to_date,
+					},
+					freeze: true,
+					freeze_message: __("Reading timesheet..."),
+					callback(r) {
+						if (!r.message) return;
+						frm.clear_table("details");
+						r.message.forEach((row) => frm.add_child("details", row));
+						frm.refresh_field("details");
+						frm.save().then(() =>
+							frappe.show_alert({
+								message: __("{0} equipment rows uploaded", [r.message.length]),
+								indicator: "green",
+							})
+						);
+					},
+				});
+			},
+		});
+
+	if ((frm.doc.details || []).length) {
+		frappe.confirm(__("The rows already entered will be replaced by the uploaded sheet. Continue?"), upload);
+	} else {
+		upload();
+	}
 }
 
 function apply_same_hours_dialog(frm) {
