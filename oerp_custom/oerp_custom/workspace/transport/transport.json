@@ -1,0 +1,375 @@
+{
+ "app": "oerp_custom",
+ "charts": [],
+ "content": "[{\"id\":\"JECEXjCKr3\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"-_sh1tuumc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Fleet Hiring Request\",\"col\":3}},{\"id\":\"x2LgaPwTin\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hiring Contract\",\"col\":3}},{\"id\":\"_lh79RLeyR\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hiring Receipt\",\"col\":3}},{\"id\":\"n-6EiGHous\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Equipment Timesheet\",\"col\":3}},{\"id\":\"hQJmpmzzmZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Fines\",\"col\":3}},{\"id\":\"-YMSq1LVJd\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"R5Dy5r2kM_\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"tkIHzJCohT\",\"type\":\"card\",\"data\":{\"card_name\":\"Fleet Hiring\",\"col\":4}},{\"id\":\"UTWbQAAtBn\",\"type\":\"card\",\"data\":{\"card_name\":\"Equipment & Certificates\",\"col\":4}},{\"id\":\"I3OT9tB7oc\",\"type\":\"card\",\"data\":{\"card_name\":\"Fuel Cards\",\"col\":4}},{\"id\":\"4UUjNCHoF9\",\"type\":\"card\",\"data\":{\"card_name\":\"Fines\",\"col\":4}},{\"id\":\"bOcNJxU-yB\",\"type\":\"card\",\"data\":{\"card_name\":\"Journey Plan\",\"col\":4}},{\"id\":\"hDh8kxTtg7\",\"type\":\"card\",\"data\":{\"card_name\":\"Tools\",\"col\":4}},{\"id\":\"0ZR_BJM6-r\",\"type\":\"card\",\"data\":{\"card_name\":\"Contracts & Masters\",\"col\":4}},{\"id\":\"RC3HsPH2dQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "creation": "2026-11-03 00:00:00",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "car",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Transport",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fleet Hiring",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fleet Hiring Request",
+   "link_count": 0,
+   "link_to": "Fleet Hiring Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hiring Contract",
+   "link_count": 0,
+   "link_to": "Hiring Contract",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Contract Extension",
+   "link_count": 0,
+   "link_to": "Contract Extension",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hiring Receipt",
+   "link_count": 0,
+   "link_to": "Hiring Receipt",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Equipment & Certificates",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Equipment Timesheet",
+   "link_count": 0,
+   "link_to": "Equipment Timesheet",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Equipment Certificate",
+   "link_count": 0,
+   "link_to": "Equipment Certificate",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Equipment Certificate Master",
+   "link_count": 0,
+   "link_to": "Equipment Certificate Master",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Equipment Certificate Renewal",
+   "link_count": 0,
+   "link_to": "Equipment Certificate Renewal",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fuel Cards",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fuel Card Master",
+   "link_count": 0,
+   "link_to": "Fuel Card Master",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fuel Card Transaction",
+   "link_count": 0,
+   "link_to": "Fuel Card Transaction",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fuel Card Prices",
+   "link_count": 0,
+   "link_to": "Fuel Card Prices",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fuel Type Master",
+   "link_count": 0,
+   "link_to": "Fuel Type Master",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fines",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Employee Fines",
+   "link_count": 0,
+   "link_to": "Employee Fines",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Fine Type Master",
+   "link_count": 0,
+   "link_to": "Fine Type Master",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Journey Plan",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Journey Plan",
+   "link_count": 0,
+   "link_to": "Journey Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tools",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tool Registry",
+   "link_count": 0,
+   "link_to": "Tool Registry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tool Transfer",
+   "link_count": 0,
+   "link_to": "Tool Transfer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tools Disposal",
+   "link_count": 0,
+   "link_to": "Tools Disposal",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Contracts & Masters",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vendor Contract",
+   "link_count": 0,
+   "link_to": "Vendor Contract",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Contract Clause",
+   "link_count": 0,
+   "link_to": "Contract Clause",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Mode of Transport",
+   "link_count": 0,
+   "link_to": "Mode of Transport",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Hiring Request Tracking Report",
+   "link_count": 0,
+   "link_to": "Hiring Request Tracking Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "MRF Status by Cost Center",
+   "link_count": 0,
+   "link_to": "MRF Status by Cost Center",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-11-03 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Oerp Custom",
+ "name": "Transport",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "label": "Fleet Hiring Request",
+   "link_to": "Fleet Hiring Request",
+   "type": "DocType"
+  },
+  {
+   "label": "Hiring Contract",
+   "link_to": "Hiring Contract",
+   "type": "DocType"
+  },
+  {
+   "label": "Hiring Receipt",
+   "link_to": "Hiring Receipt",
+   "type": "DocType"
+  },
+  {
+   "label": "Equipment Timesheet",
+   "link_to": "Equipment Timesheet",
+   "type": "DocType"
+  },
+  {
+   "label": "Employee Fines",
+   "link_to": "Employee Fines",
+   "type": "DocType"
+  }
+ ],
+ "title": "Transport",
+ "type": "Workspace"
+}
